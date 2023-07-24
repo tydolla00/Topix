@@ -4,7 +4,7 @@ export default function ErrorPage() {
   const error: ErrorProps = useRouteError() as ErrorProps;
   console.error(error);
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-screen text-white">
       <div>
         <h1 className="text-4xl mb-4">{error.status}</h1>
         <h2>{error.statusText}</h2>

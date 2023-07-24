@@ -42,7 +42,7 @@ export default function Quizzes() {
 
 const Quiz = ({ title, message }: { title: string; message: string }) => {
   return (
-    <div className="rounded-xl bg-white p-3 w-full mb-4 cursor-pointer">
+    <div className="rounded-xl bg-black text-white dark:text-black dark:bg-white p-3 w-full mb-4 cursor-pointer">
       <div>{title}</div>
       <div className="h-0.5 bg-black" />
       <div className="">{message}</div>

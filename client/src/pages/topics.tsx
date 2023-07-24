@@ -31,7 +31,7 @@ export default function Topics() {
 
 const Topic = ({ text }: { text: string }) => {
   return (
-    <div className="bg-white cursor-pointer text-md rounded-full w-48 h-14 p-.5 text-center flex items-center justify-center">
+    <div className="dark:bg-white dark:text-black bg-black text-white cursor-pointer text-md rounded-full w-48 h-14 p-.5 text-center flex items-center justify-center">
       {text}
     </div>
   );
