@@ -26,7 +26,11 @@ export default function Home() {
             </button>
           </div>
         </Square>
-        <Square css="bg-white text-black" text="Best Movies" img={Avatar}>
+        <Square
+          css="dark:bg-white bg-black text-white dark:text-black"
+          text="Best Movies"
+          img={Avatar}
+        >
           <div className="flex justify-center">
             <button className="bg-black text-white rounded-full px-6 py-1 absolute bottom-2">
               Click here
