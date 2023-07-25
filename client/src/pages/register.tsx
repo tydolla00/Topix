@@ -32,7 +32,7 @@ export default function Register() {
       css: `${errors.username && "is-invalid"}`,
       message: errors.username?.message,
       label: "Username",
-      placeholder: "Enter your first name",
+      placeholder: "Enter your username",
     },
     {
       name: "email",

@@ -16,6 +16,7 @@ const getConfig = () => {
         PGPORT: process.env.PGPORT ? Number(process.env.PGPORT) : undefined,
         PGPASSWORD: process.env.PGPASSWORD,
         API_KEY: process.env.API_KEY,
+        SECRET_KEY: process.env.SECRET_KEY,
     };
 };
 // Throwing an Error if any field was undefined we don't
