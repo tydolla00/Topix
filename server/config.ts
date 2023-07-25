@@ -15,6 +15,7 @@ interface ENV {
   PGPORT: number | undefined;
   PGPASSWORD: string | undefined;
   API_KEY: string | undefined;
+  SECRET_KEY: string | undefined;
 }
 
 interface Config {
@@ -25,6 +26,7 @@ interface Config {
   PGPORT: number;
   PGPASSWORD: string;
   API_KEY: string;
+  SECRET_KEY: string;
 }
 
 // Loading process.env as ENV interface
@@ -38,6 +40,7 @@ const getConfig = (): ENV => {
     PGPORT: process.env.PGPORT ? Number(process.env.PGPORT) : undefined,
     PGPASSWORD: process.env.PGPASSWORD,
     API_KEY: process.env.API_KEY,
+    SECRET_KEY: process.env.SECRET_KEY,
   };
 };
 

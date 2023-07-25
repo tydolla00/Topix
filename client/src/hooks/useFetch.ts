@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 
 const useFetch = (url: string, method: Methods) => {
-  const [data, setData] = useState<any>([]);
+  const [data, setData] = useState<AxiosResponse | []>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -24,7 +24,7 @@ const useFetch = (url: string, method: Methods) => {
 };
 export default useFetch;
 
-const fetch = async (url: string, method: Methods) => {
+const fetch = async (url: string, method: Methods): Promise<AxiosResponse> => {
   switch (method) {
     case "POST":
       return await axios.post(url);
