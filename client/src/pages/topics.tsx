@@ -1,4 +1,9 @@
+import { useLoaderData } from "react-router-dom";
+import { Users } from "../data/types";
+
 export default function Topics() {
+  const users = useLoaderData() as Users;
+  console.log(users);
   const data = [
     "Best Nickelodeon Show",
     "Best Disney Show",
@@ -21,9 +26,18 @@ export default function Topics() {
         </div>
         <div className="flex justify-center gap-4 flex-wrap">
           {data.map((item) => (
-            <Topic text={item} />
+            <Topic key={item} text={item} />
           ))}
         </div>
+        {users.map((item) => (
+          <>
+            <p>{item.id}</p>
+            <p>{item.username}</p>
+            <p>{item.email}</p>
+            <p>{item.first_name}</p>
+            <p>{item.last_name}</p>
+          </>
+        ))}
       </div>
     </>
   );

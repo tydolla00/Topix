@@ -2,7 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
 import DarkModeSwitcher from "./darkmodeswitcher";
-import useDarkMode from "../hooks/useDarkMode";
+
 export default function Navbar() {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
@@ -53,27 +53,31 @@ export default function Navbar() {
           <GiHamburgerMenu />
         </div>
         <div className="hidden sm:flex gap-3">
-          <button>Login</button>
-          <button>Register</button>
+          <Link to="/login">
+            <div>Login</div>
+          </Link>
+          <Link to="/register">
+            <div>Register</div>
+          </Link>
         </div>
       </nav>
       {isNavOpen && (
         <>
           <ul className="absolute right-0 w-40 text-md text-center text-black bg-white z-10 p-2 divide-y divide-black shadow-lg rounded-sm">
-            <Link className="" to="/login">
-              <li className="p-2 hover:bg-gray-200 cursor-pointer">Login</li>
-            </Link>
-            <Link to="/register">
-              <li className="p-2 hover:bg-gray-200 cursor-pointer">Register</li>
+            <Link to="/profile">
+              <li className="p-2 hover:bg-gray-200 cursor-pointer">
+                My Account
+              </li>
             </Link>
             <Link to="/settings">
               <li className="p-2 hover:bg-gray-200 cursor-pointer">Settings</li>
             </Link>
             <DarkModeSwitcher />
-            <Link to="/profile">
-              <li className="p-2 hover:bg-gray-200 cursor-pointer">
-                My Account
-              </li>
+            <Link className="" to="/login">
+              <li className="p-2 hover:bg-gray-200 cursor-pointer">Login</li>
+            </Link>
+            <Link to="/register">
+              <li className="p-2 hover:bg-gray-200 cursor-pointer">Register</li>
             </Link>
           </ul>
         </>

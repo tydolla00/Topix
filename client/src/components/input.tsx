@@ -1,14 +1,24 @@
-export const InputForm = ({ label, placeholder }: InputFormProps) => {
+export const InputForm = ({
+  label,
+  placeholder,
+  type = "text",
+  required = true,
+}: InputFormProps) => {
   return (
     <>
-      <label className="dark:text-white text-black after:content-['*'] after:ml-0.5 after:text-red-500">
+      <label
+        className={`${
+          required && "after:content-['*'] after:ml-0.5 after:text-red-500"
+        }`}
+      >
         {label}
       </label>
       <input
-        className="rounded p-1 text-black"
+        name={label.split(" ").join("").toLowerCase()}
+        className="focus:ring-blue-600 focus:border-blue-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:text-sm"
         placeholder={placeholder}
-        type="text"
-        required
+        type={type}
+        required={required}
       />
     </>
   );
@@ -38,9 +48,9 @@ export const RegisterInputForm = ({
     </>
   );
 };
-interface RegisterProps extends InputFormProps {
+export interface RegisterProps extends InputFormProps {
   name: string;
-  type: string;
+  type: "password" | "text";
   css: string;
   register: any;
 }
@@ -48,4 +58,6 @@ interface RegisterProps extends InputFormProps {
 interface InputFormProps {
   label: string;
   placeholder: string;
+  type?: "text" | "password";
+  required?: boolean;
 }

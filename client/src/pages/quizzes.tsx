@@ -33,7 +33,7 @@ export default function Quizzes() {
       </div>
       <div className="mt-4">
         {data.map((item) => (
-          <Quiz title={item.title} message={item.message} />
+          <Quiz key={item.message} title={item.title} message={item.message} />
         ))}
       </div>
     </div>

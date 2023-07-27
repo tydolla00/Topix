@@ -2,8 +2,22 @@ import { RegisterInputForm } from "../components/input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import useFetch from "../hooks/useFetch";
+import { UserAuthData, useAuth } from "../hooks/useAuth";
+import { redirect } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
 
 export default function Register() {
+  const [request, setRequest] = useState({ url: "", body: {} });
+  const {
+    data: res,
+    loading,
+    error,
+    setLoading,
+  } = useFetch<UserAuthData>(request.url, "POST", request.body);
+  const { login } = useAuth();
+
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First name is required"),
     lastName: Yup.string().required(),
@@ -25,7 +39,14 @@ export default function Register() {
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(validationSchema) });
-  const data = [
+  const data: {
+    name: string;
+    type: "text" | "password";
+    css: string;
+    message: string | undefined;
+    label: string;
+    placeholder: string;
+  }[] = [
     {
       name: "username",
       type: "text",
@@ -59,7 +80,44 @@ export default function Register() {
       placeholder: "*****",
     },
   ];
-  const onSubmit = (data: any, e: any) => {};
+  const onSubmit = async (data: any, e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    const firstName = data.firstName.replaceAll(" ", "").toLowerCase();
+    const lastName = data.lastName.replaceAll(" ", "").toLowerCase();
+    const username = data.username.replaceAll(" ", "").toLowerCase();
+    const password = data.password;
+    const email = data.email.toLowerCase();
+    setRequest({
+      url: "http://localhost:8000/auth/signup",
+      body: { firstName, lastName, username, password, email },
+    });
+    // setTimeout(() => {
+    //   console.log("first");
+    //   console.log(res);
+    // }, 3000);
+    while (loading) {
+      console.log("Loading");
+    }
+    error && console.error(error);
+    // const res = await axios
+    //   .post("http://localhost:8000/auth/signup", {
+    //     firstName,
+    //     lastName,
+    //     username,
+    //     password,
+    //     email,
+    //   })
+    //   .then((res) => {
+    //     return res.data;
+    //   });
+    if (res && !Array.isArray(res)) {
+      login(res);
+      return redirect("/");
+    }
+    console.log("Got here");
+    console.log(res);
+  };
   return (
     <>
       <div className="max-w-[80vw] my-0 mx-auto">

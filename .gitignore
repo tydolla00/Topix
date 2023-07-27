@@ -20,7 +20,7 @@ env
 server/routes/*.http
 
 #Notes
-models.txt
+*.txt
 
 # Editor directories and files
 .vscode/*
