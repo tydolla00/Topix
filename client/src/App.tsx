@@ -11,8 +11,14 @@ import { ParallaxProvider } from "react-scroll-parallax";
 import { useEffect } from "react";
 import Login from "./pages/login";
 import Register from "./pages/register";
+import { getUsers } from "./data/loaders";
+import { ProtectedLayout } from "./components/protectedRoute";
+import Profile from "./pages/profiles";
+import { action as LoginAction } from "./data/actions";
+import { useAuth } from "./hooks/useAuth";
 
 function App() {
+  const { login } = useAuth();
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.add(localStorage.theme);
@@ -43,6 +49,7 @@ function App() {
         {
           path: "topics",
           element: <Topics />,
+          loader: getUsers,
         },
         {
           path: "contact",
@@ -51,10 +58,20 @@ function App() {
         {
           path: "login",
           element: <Login />,
+          action: LoginAction(login),
         },
         {
           path: "register",
           element: <Register />,
+        },
+        {
+          element: <ProtectedLayout />, // Protected Routes
+          children: [
+            {
+              path: "/profile",
+              element: <Profile />,
+            },
+          ],
         },
       ],
     },

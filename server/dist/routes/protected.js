@@ -63,8 +63,13 @@ router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function*
     const hashedPassword = yield bcrypt.hash(user.password, 10);
     user.password = hashedPassword;
     yield (0, db_1.queryNoCall)("INSERT INTO USERS(username,email,password,first_name,last_name) VALUES($1,$2,$3,$4,$5) RETURNING *", Object.values(user));
-    const accessToken = jwtCreate(user.username);
-    res.json({ accessToken: accessToken });
+    const expirationDate = Math.floor(Date.now() / 1000 + 60 * 60);
+    const accessToken = jwtCreate(user.username, expirationDate);
+    res.json({
+        accessToken: accessToken,
+        expiry: expirationDate,
+        firstName: user.firstName,
+    });
 }));
 router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const username = req.body.username;
@@ -75,24 +80,30 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const isEqual = yield bcrypt.compare(req.body.password, user.password);
     if (!isEqual)
         return res.status(401).send({ error: "Invalid username or password" });
-    const accessToken = jwtCreate(username);
-    res.json({ accessToken: accessToken });
+    const expirationDate = Date.now() / 1000 + 60 * 60;
+    const accessToken = jwtCreate(username, expirationDate);
+    res.json({
+        token: accessToken,
+        expiry: expirationDate,
+        firstName: user.firstName,
+    });
 }));
 const jwtValidate = (req, res, next) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (token == null)
         return res.sendStatus(401);
-    jwt.verify(token, config_1.default.SECRET_KEY, (err) => {
+    jwt.verify(token, config_1.default.SECRET_KEY, (err, user) => {
         if (err)
             return res.sendStatus(403);
+        req.user = user;
         next();
     });
 };
-const jwtCreate = (username) => {
+const jwtCreate = (username, expirationDate) => {
     return jwt.sign({
         sub: username,
         iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + 60 * 60, // Expire after one hour
+        exp: expirationDate, // Expire after one hour
     }, config_1.default.SECRET_KEY);
 };

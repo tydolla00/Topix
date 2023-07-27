@@ -1,6 +1,6 @@
 import Router from "express-promise-router";
 import { Router as ExpressRouter } from "express";
-import { Users } from "../models/types";
+import { User } from "../models/types";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import config from "../config";
@@ -21,7 +21,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
-  const user: Users = {
+  const user: User = {
     username: req.body.username,
     email: req.body.email,
     password: req.body.password,
@@ -35,8 +35,14 @@ router.post("/signup", async (req, res) => {
     "INSERT INTO USERS(username,email,password,first_name,last_name) VALUES($1,$2,$3,$4,$5) RETURNING *",
     Object.values(user)
   );
-  const accessToken = jwtCreate(user.username);
-  res.json({ accessToken: accessToken });
+
+  const expirationDate = Math.floor(Date.now() / 1000 + 60 * 60);
+  const accessToken = jwtCreate(user.username, expirationDate);
+  res.json({
+    accessToken: accessToken,
+    expiry: expirationDate,
+    firstName: user.firstName,
+  });
 });
 
 router.post("/login", async (req, res) => {
@@ -44,14 +50,19 @@ router.post("/login", async (req, res) => {
   const queryResult = await query("SELECT * FROM USERS WHERE username = $1", [
     username,
   ]);
-  const user: Users = queryResult.rows[0];
+  const user: User = queryResult.rows[0];
 
   const isEqual = await bcrypt.compare(req.body.password, user.password);
   if (!isEqual)
     return res.status(401).send({ error: "Invalid username or password" });
 
-  const accessToken = jwtCreate(username);
-  res.json({ accessToken: accessToken });
+  const expirationDate = Date.now() / 1000 + 60 * 60;
+  const accessToken = jwtCreate(username, expirationDate);
+  res.json({
+    token: accessToken,
+    expiry: expirationDate,
+    firstName: user.firstName,
+  });
 });
 
 const jwtValidate = (req: any, res: any, next: any) => {
@@ -59,18 +70,19 @@ const jwtValidate = (req: any, res: any, next: any) => {
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null) return res.sendStatus(401);
 
-  jwt.verify(token, config.SECRET_KEY, (err: any) => {
+  jwt.verify(token, config.SECRET_KEY, (err: any, user: any) => {
     if (err) return res.sendStatus(403);
+    req.user = user;
     next();
   });
 };
 
-const jwtCreate = (username: string) => {
+const jwtCreate = (username: string, expirationDate: number) => {
   return jwt.sign(
     {
       sub: username,
       iat: Math.floor(Date.now() / 1000),
-      exp: Math.floor(Date.now() / 1000) + 60 * 60, // Expire after one hour
+      exp: expirationDate, // Expire after one hour
     },
     config.SECRET_KEY
   );
