@@ -17,5 +17,24 @@ export default {
       },
     },
   },
-  plugins: [`prettier-plugin-tailwindcss`],
+  plugins: [`prettier-plugin-tailwindcss`, require("daisyui")],
+  daisyui: {
+    themes: [
+      "corporate",
+      {
+        mytheme: {
+          primary: "#7dd3fc",
+          secondary: "#7c3aed",
+          accent: "#f471b5",
+          neutral: "#1d283a",
+          "base-100": "#0f1729",
+          info: "#0ca6e9",
+          success: "#2bd4bd",
+          warning: "#f4c152",
+          error: "#fb6f84",
+        },
+      },
+    ],
+    darkTheme: "mytheme",
+  },
 };

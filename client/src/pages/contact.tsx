@@ -12,27 +12,30 @@ export default function Contact() {
           me about your experience!
         </div>
         <form>
-          <div className="flex justify-between my-3">
-            <div className="flex flex-col">
+          <div className="sm:flex justify-between">
+            <div className="flex flex-col my-4">
               <InputForm
                 label="First Name"
                 placeholder="Enter your first name"
               />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col my-4">
               <InputForm label="Last Name" placeholder="Enter your last name" />
             </div>
           </div>
-          <div className="flex flex-col my-3">
+          <div className="flex flex-col my-4">
             <InputForm label="Email" placeholder="Enter your email" />
           </div>
-          <div className="flex flex-col my-3">
-            <label className="dark:text-white text-black">Subject</label>
+          <div className="flex flex-col my-4">
+            <label className="label">Subject</label>
             <select
               required
               name="subject"
-              className="rounded-md text-black p-2"
+              className="select w-full max-w-xs select-bordered"
             >
+              <option disabled selected>
+                Choose an option
+              </option>
               <option value="Bug Fixes">Bug Fixes</option>
               <option value="Suggestions">Suggestions</option>
               <option value="Experience">
@@ -44,8 +47,11 @@ export default function Contact() {
           <label className="dark:text-white text-black after:content-['*'] after:ml-0.5 after:text-red-500">
             Message
           </label>
-          <textarea required className="w-full h-24 text-black rounded" />
-          <button className="mx-auto bg-sky-400 p-4 rounded" type="submit">
+          <textarea required className="textarea textarea-bordered w-full" />
+          <button
+            className="btn btn-outline btn-primary btn-block"
+            type="submit"
+          >
             Submit
           </button>
         </form>

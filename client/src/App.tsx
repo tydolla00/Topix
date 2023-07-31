@@ -16,12 +16,14 @@ import { ProtectedLayout } from "./components/protectedRoute";
 import Profile from "./pages/profiles";
 import { action as LoginAction } from "./data/actions";
 import { useAuth } from "./hooks/useAuth";
+import { themeChange } from "theme-change";
 
 function App() {
   const { login } = useAuth();
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.add(localStorage.theme);
+    themeChange(false);
   }, []);
 
   const router = createBrowserRouter([

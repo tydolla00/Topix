@@ -5,7 +5,7 @@ body {
   min-height: 100vh;
   min-width: 100vw;
   margin: 0;
-  background-color: rgba(0, 0, 0, 255);
+  /* background-color: rgba(0, 0, 0, 255); */
 }
 
 .glass {
