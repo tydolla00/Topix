@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 
 const useFetch = <T>(
   url: string,
@@ -7,30 +7,52 @@ const useFetch = <T>(
   body?: any,
   config?: any
 ) => {
-  const [data, setData] = useState<T | []>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [state, dispatch] = useReducer(reducer, {
+    data: null,
+    isLoading: true,
+    error: null,
+  });
 
-  useEffect(() => {
-    if (url.length < 1) return;
-    setLoading(true);
-    console.log("loading here");
-    fetchData(); // Call the async function inside useEffect
-  }, [url, method]);
-
-  const fetchData = async () => {
-    try {
-      const res = await fetch(url, method, body, config);
-      console.log(res.data);
-      setLoading(false);
-      setData(res.data);
-    } catch (error) {
-      setLoading(false);
-      setError("Oops, a problem occurred. Error: " + error);
+  function reducer(
+    state: any,
+    {
+      type,
+      data,
+      error,
+    }: { type: "loading" | "success" | "error"; data?: T; error?: Error }
+  ) {
+    switch (type) {
+      case "loading":
+        return { ...state, isLoading: true };
+      case "success":
+        return { data, isLoading: false, error: null };
+      case "error":
+        return { data: null, isLoading: false, error };
+      default:
+        throw new Error("Unknown action type");
     }
-  };
+  }
+  useEffect(() => {
+    let shouldCancel = false;
 
-  return { data, loading, error, setLoading };
+    const callFetch = async () => {
+      dispatch({ type: "loading" });
+
+      try {
+        const response = await fetch(url, method, body, config);
+        if (shouldCancel) return;
+        dispatch({ type: "success", data: response.data });
+      } catch (error: any) {
+        if (shouldCancel) return;
+        dispatch({ type: "error", error });
+      }
+
+      callFetch();
+      return () => (shouldCancel = true);
+    };
+  }, [url]);
+
+  return state;
 };
 export default useFetch;
 
