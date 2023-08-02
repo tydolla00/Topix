@@ -1,3 +1,5 @@
+import QuizCard from "../components/card";
+
 export default function Quizzes() {
   const data = [
     {
@@ -28,13 +30,17 @@ export default function Quizzes() {
       <div className="text-2xl uppercase mx-2 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 from-10% to-70% to-rose-500 my-4">
         Test your knowledge on user submitted quizzes
       </div>
-      <div className="w-28 ml-auto cursor-pointer bg-green-500 text-white text-center rounded-full p-2">
+      <button className="ml-auto btn btn-outline btn-success p-2 block">
         Add Quiz +
-      </div>
-      <div className="mt-4">
-        {data.map((item) => (
+      </button>
+      <div className="mt-4 flex flex-wrap gap-10">
+        {/* {data.map((item) => (
           <Quiz key={item.message} title={item.title} message={item.message} />
-        ))}
+        ))} */}
+        <QuizCard />
+        <QuizCard />
+        <QuizCard />
+        <QuizCard />
       </div>
     </div>
   );

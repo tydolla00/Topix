@@ -24,7 +24,7 @@ export default function Slider() {
         </div>
         <RightArrow
           onClick={() => scroll(300)}
-          className="text-white absolute right-0 text-4xl"
+          className="text-white relative right-0 text-4xl"
         />
       </div>
     </>

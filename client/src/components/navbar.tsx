@@ -2,12 +2,13 @@ import { Link, Outlet } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
 import DarkModeSwitcher from "./darkmodeswitcher";
+import Footer from "./footer";
 
 export default function Navbar() {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   return (
-    <>
+    <div className="overflow-x-hidden">
       <nav className="navbar bg-base-100">
         <div className="navbar-start text-lg sm:text-2xl font-extrabold normal-case btn btn-ghost flex-auto">
           <span className="bg-gradient-to-r from-base-content to-70% to-primary text-transparent bg-clip-text">
@@ -30,10 +31,10 @@ export default function Navbar() {
                     <Link to="/movies">Movies</Link>
                   </li>
                   <li>
-                    <Link to="">Television</Link>
+                    <Link to="/tv">Television</Link>
                   </li>
                   <li>
-                    <Link to="">Gaming</Link>
+                    <Link to="/gaming">Gaming</Link>
                   </li>
                 </ul>
               </details>
@@ -67,8 +68,34 @@ export default function Navbar() {
             </svg>
           </button>
           <div className="dropdown dropdown-end">
-            <label className="btn btn-circle btn-ghost text-2xl" tabIndex={0}>
+            {/* <label className="btn btn-circle btn-ghost text-2xl" tabIndex={0}>
               <GiHamburgerMenu />
+            </label> */}
+            <label
+              className="btn btn-circle group swap swap-active swap-rotate"
+              tabIndex={0}
+            >
+              {/* hamburger icon */}
+              <svg
+                className="group-focus-within:hidden fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 512 512"
+              >
+                <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z" />
+              </svg>
+
+              {/* close icon */}
+              <svg
+                className="hidden group-focus-within:block fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 512 512"
+              >
+                <polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" />
+              </svg>
             </label>
             <ul
               tabIndex={0}
@@ -108,81 +135,8 @@ export default function Navbar() {
           </dialog>
         </div>
       </nav>
-      {/* <nav className="flex justify-around text-black dark:text-white">
-        <div className="text-xl font-extrabold">
-          To<span className="text-sky-300">pix</span>
-        </div>
-        <ul className="flex gap-3 justify-center">
-          <li>
-            <Link
-              className="cursor-pointer hover:font-extrabold hover:text-sky-300"
-              to="/home"
-            >
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="cursor-pointer hover:font-extrabold hover:text-sky-300"
-              to="/quizzes"
-            >
-              Quizzes
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="cursor-pointer hover:font-extrabold hover:text-sky-300"
-              to="/topics"
-            >
-              Topics
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="cursor-pointer hover:font-extrabold hover:text-sky-300"
-              to="/contact"
-            >
-              Contact
-            </Link>
-          </li>
-        </ul>
-        <div
-          onClick={() => setIsNavOpen(!isNavOpen)}
-          className="sm:hidden text-2xl cursor-pointer"
-        >
-          <GiHamburgerMenu />
-        </div>
-        <div className="hidden sm:flex gap-3">
-          <Link to="/login">
-            <div>Login</div>
-          </Link>
-          <Link to="/register">
-            <div>Register</div>
-          </Link>
-        </div>
-      </nav> */}
-      {isNavOpen && (
-        <>
-          <ul className="absolute right-0 w-40 text-md text-center text-black bg-white z-10 p-2 divide-y divide-black shadow-lg rounded-sm">
-            <Link to="/profile">
-              <li className="p-2 hover:bg-gray-200 cursor-pointer">
-                My Account
-              </li>
-            </Link>
-            <Link to="/settings">
-              <li className="p-2 hover:bg-gray-200 cursor-pointer">Settings</li>
-            </Link>
-            <DarkModeSwitcher />
-            <Link className="" to="/login">
-              <li className="p-2 hover:bg-gray-200 cursor-pointer">Login</li>
-            </Link>
-            <Link to="/register">
-              <li className="p-2 hover:bg-gray-200 cursor-pointer">Register</li>
-            </Link>
-          </ul>
-        </>
-      )}
       <Outlet />
-    </>
+      <Footer />
+    </div>
   );
 }
