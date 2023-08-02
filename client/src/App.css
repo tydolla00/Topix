@@ -35,3 +35,15 @@ body {
   width: 100%;
   text-align: center;
 }
+
+.fly {
+  animation: cardfly 2s 1 forwards;
+}
+
+@keyframes cardfly {
+  0% {
+  }
+  100% {
+    transform: translateX(-400px) translateY(-300px) rotateZ(-40deg);
+  }
+}
