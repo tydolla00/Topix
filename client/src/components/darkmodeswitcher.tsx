@@ -12,18 +12,13 @@ export default function DarkModeSwitcher() {
     setDarkSide(checked);
   };
   return (
-    <>
-      <li
-        className="p-2 hover:bg-gray-200 cursor-pointer"
-        onClick={() => toggleDarkMode(!darkSide)}
-      >
-        {colorTheme.charAt(0).toUpperCase() + colorTheme.slice(1)} Mode
-        {darkSide ? (
-          <MdOutlineLightMode className="text-xl inline-block" />
-        ) : (
-          <MdOutlineDarkMode className="text-xl inline-block" />
-        )}
-      </li>
-    </>
+    <li className="" onClick={() => toggleDarkMode(!darkSide)}>
+      {colorTheme.charAt(0).toUpperCase() + colorTheme.slice(1)} Mode
+      {darkSide ? (
+        <MdOutlineLightMode className="text-lg text-white z-30" />
+      ) : (
+        <MdOutlineDarkMode className="text-lg text-white z-30" />
+      )}
+    </li>
   );
 }

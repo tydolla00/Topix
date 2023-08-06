@@ -2,21 +2,18 @@ import { RegisterInputForm } from "../components/input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import useFetch from "../hooks/useFetch";
-import { UserAuthData, useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
 import { redirect } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
+import { ErrorAlert } from "../components/alert";
 
 export default function Register() {
-  const [request, setRequest] = useState({ url: "", body: {} });
-  const {
-    data: res,
-    loading,
-    error,
-    setLoading,
-  } = useFetch<UserAuthData>(request.url, "POST", request.body);
   const { login } = useAuth();
+  const [error, setError] = useState<string | any>("");
+
+  // TODO Work with loading state. Loading sign.
+  // * const [isLoading, setIsLoading] = useState(false);
 
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First name is required"),
@@ -81,98 +78,98 @@ export default function Register() {
     },
   ];
   const onSubmit = async (data: any, e: any) => {
+    setError("");
     e.preventDefault();
-    setLoading(true);
     const firstName = data.firstName.replaceAll(" ", "").toLowerCase();
     const lastName = data.lastName.replaceAll(" ", "").toLowerCase();
     const username = data.username.replaceAll(" ", "").toLowerCase();
     const password = data.password;
     const email = data.email.toLowerCase();
-    setRequest({
-      url: "http://localhost:8000/auth/signup",
-      body: { firstName, lastName, username, password, email },
-    });
-    // setTimeout(() => {
-    //   console.log("first");
-    //   console.log(res);
-    // }, 3000);
-    while (loading) {
-      console.log("Loading");
-    }
-    error && console.error(error);
-    // const res = await axios
-    //   .post("http://localhost:8000/auth/signup", {
-    //     firstName,
-    //     lastName,
-    //     username,
-    //     password,
-    //     email,
-    //   })
-    //   .then((res) => {
-    //     return res.data;
-    //   });
+
+    const res = await axios
+      .post("http://localhost:8000/auth/signup", {
+        firstName,
+        lastName,
+        username,
+        password,
+        email,
+      })
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        setError(err);
+      });
     if (res && !Array.isArray(res)) {
       login(res);
-      return redirect("/");
+      return redirect("/home");
     }
-    console.log("Got here");
-    console.log(res);
   };
   return (
     <>
       <div className="max-w-[80vw] my-0 mx-auto">
-        <h2 className="text-3xl text-center mt-3">Create your account</h2>
-        <p className="text-gray-500 text-center">
-          Join the community and create Topix for everyone to enjoy.
-        </p>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex justify-between my-3">
-            <div className="flex flex-col">
-              <RegisterInputForm
-                name="firstName"
-                label="First Name"
-                placeholder="Enter your first name"
-                register={register}
-                type="text"
-                css={`
-                  ${errors.firstName && "is-invalid"}
-                `}
-              />
-              <div className="invalid-feedback">
-                {errors.firstName?.message}
+        {error && <ErrorAlert customError={error.response.data} />}
+        <div className="hero-content flex-col md:flex-row">
+          <div>
+            <h2 className="text-3xl text-center mt-3">Create your account</h2>
+            <p className="text-gray-500 text-center">
+              Join the community and create Topix for everyone to enjoy.
+            </p>
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex my-3">
+              <div className="flex flex-col">
+                <RegisterInputForm
+                  name="firstName"
+                  label="First Name"
+                  placeholder="Enter your first name"
+                  register={register}
+                  type="text"
+                  css={`
+                    ${errors.firstName && "is-invalid"}
+                  `}
+                />
+                <div className="invalid-feedback">
+                  {errors.firstName?.message}
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <RegisterInputForm
+                  name="lastName"
+                  label="Last Name"
+                  placeholder="Enter your last name"
+                  register={register}
+                  type="text"
+                  css={`
+                    ${errors.lastName && "is-invalid"}
+                  `}
+                />
+                <div className="invalid-feedback">
+                  {errors.lastName?.message}
+                </div>
               </div>
             </div>
-            <div className="flex flex-col">
-              <RegisterInputForm
-                name="lastName"
-                label="Last Name"
-                placeholder="Enter your last name"
-                register={register}
-                type="text"
-                css={`
-                  ${errors.lastName && "is-invalid"}
-                `}
-              />
-              <div className="invalid-feedback">{errors.lastName?.message}</div>
-            </div>
-          </div>
-          {data.map((item) => (
-            <div className="flex flex-col my-3">
-              <RegisterInputForm
-                name={item.name}
-                label={item.label}
-                placeholder={item.placeholder}
-                register={register}
-                type={item.type}
-                css={item.css}
-              />
-              <div className="invalid-feedback">{item.message}</div>
-            </div>
-          ))}
-          <button className="mx-auto bg-sky-400 p-4 rounded" type="submit">
-            Submit
-          </button>
-        </form>
+            {data.map((item) => (
+              <div key={item.name} className="flex flex-col my-3">
+                <RegisterInputForm
+                  name={item.name}
+                  label={item.label}
+                  placeholder={item.placeholder}
+                  register={register}
+                  type={item.type}
+                  css={item.css}
+                />
+                <div className="invalid-feedback">{item.message}</div>
+              </div>
+            ))}
+            <button
+              className="btn btn-outline btn-primary mx-auto w-full"
+              type="submit"
+            >
+              Submit
+            </button>
+          </form>
+        </div>
       </div>
     </>
   );

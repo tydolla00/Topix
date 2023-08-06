@@ -39,7 +39,7 @@ export const RegisterInputForm = ({
         {label}
       </label>
       <input
-        className={`rounded p-1 text-black ${css}`}
+        className={`input input-bordered w-full max-w-xs ${css}`}
         name={name}
         placeholder={placeholder}
         type={type}

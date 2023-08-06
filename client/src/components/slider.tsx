@@ -31,8 +31,6 @@ export default function Slider() {
   );
 }
 
-const SlideContainer = () => <></>;
-
 const Slide = () => (
   <>
     <div className="flex justify-center items-center h-36 w-24 bg-white cursor-pointer">
@@ -40,7 +38,3 @@ const Slide = () => (
     </div>
   </>
 );
-
-type SlideProps = {
-  title: string;
-};
