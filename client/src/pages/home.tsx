@@ -2,8 +2,7 @@ import Cartoons from "../assets/cartoons.jpg";
 import Spongebob from "../assets/spongebob.png";
 import HarryPotter from "../assets/harry-potter.png";
 import StarWars from "../assets/4k-star-wars-battlefront-helmet-btxw0mp8avfl87n5.jpg";
-import Slider from "../components/slider";
-import { RxAvatar as Avatar } from "react-icons/rx";
+// * import Slider from "../components/slider";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -27,69 +26,50 @@ export default function Home() {
         <Stack />
         <Stack />
       </div>
-      {/* <div className="flex my-5 justify-between p-3">
-        <Square
-          css="bg-[#6E2FF2] text-white"
-          text="Best Cartoon Shows"
-          img={Avatar}
-        >
-          <div className="flex justify-center">
-            <button className="bg-white text-black rounded-full mx-auto px-6 py-1 absolute bottom-2">
-              Click here
-            </button>
-          </div>
-        </Square>
-        <Square
-          css="dark:bg-white bg-black text-white dark:text-black"
-          text="Best Movies"
-          img={Avatar}
-        >
-          <div className="flex justify-center">
-            <button className="bg-black text-white rounded-full px-6 py-1 absolute bottom-2">
-              Click here
-            </button>
-          </div>
-        </Square>
-      </div> */}
       <Accordion />
     </div>
   );
 }
 
-const Square = ({
-  css,
-  text,
-  img,
-  children,
-}: {
-  css: string;
-  text: string;
-  img: string;
-  children: any;
-}) => {
-  return (
-    <div className={`h-52 w-52 rounded-xl relative ${css}`}>
-      <div className="flex items-center">
-        <div className="w-12 h-12 rounded-full bg-gray-700 m-2 overflow-hidden">
-          <Avatar className="text-5xl" />
-          {/* <img className="rounded-full mb-4" src={img} /> */}
-        </div>
-        <div className="flex flex-col">
-          <div className="">Ty</div>
-          <div className="text-gray-400">Submissions: 2</div>
-        </div>
-      </div>
-      <div className="w-1 text-lg ml-3 uppercase">{text}</div>
-      {children}
-    </div>
-  );
-};
+// const Square = ({
+//   css,
+//   text,
+//   img,
+//   children,
+// }: {
+//   css: string;
+//   text: string;
+//   img: string;
+//   children: any;
+// }) => {
+//   return (
+//     <div className={`h-52 w-52 rounded-xl relative ${css}`}>
+//       <div className="flex items-center">
+//         <div className="w-12 h-12 rounded-full bg-gray-700 m-2 overflow-hidden">
+//           <Avatar className="text-5xl" />
+//           {/* <img className="rounded-full mb-4" src={img} /> */}
+//         </div>
+//         <div className="flex flex-col">
+//           <div className="">Ty</div>
+//           <div className="text-gray-400">Submissions: 2</div>
+//         </div>
+//       </div>
+//       <div className="w-1 text-lg ml-3 uppercase">{text}</div>
+//       {children}
+//     </div>
+//   );
+// };
 
 const Stack = () => {
   const data = [
-    { text: "here", id: "card1" },
-    { text: "Hello", id: "card2" },
-    { text: "Hi", id: "card3" },
+    { text: "Best Harry Potter Films", id: "card1", avi: "T", submitter: "Ty" },
+    { text: "Best Roblox Games", id: "card2", avi: "J", submitter: "Josh" },
+    {
+      text: "Best Nickelodeon Shows",
+      id: "card3",
+      avi: "Z",
+      submitter: "Zach",
+    },
   ];
   const [stacks, setStacks] = useState(data);
   useEffect(() => {
@@ -100,7 +80,7 @@ const Stack = () => {
     }, 1000);
   }, [stacks]);
   return (
-    <div className="stack indicator w-52">
+    <div className="stack indicator w-52 md:w-72">
       {stacks.map((item) => (
         <div
           id={item.id}
@@ -113,9 +93,26 @@ const Stack = () => {
             setStacks(arr);
             document.getElementById(`${item.id}`)?.remove();
           }}
-          className="text-center border border-base-content card bg-base-100"
+          className="text-center border border-base-content card bg-base-100 p-2"
         >
+          <div className="indicator-item badge badge-primary animate-bounce">
+            Click Me!
+          </div>
+          <div className="flex p-2">
+            <div className="avatar placeholder mr-3">
+              <div className="bg-neutral-focus text-neutral-content rounded-full w-10 h-10 ring ring-primary ring-offset-base-100">
+                <span className="text-2xl">T</span>
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <div>Ty</div>
+              <div className="text-gray-400">Submissions: 2</div>
+            </div>
+          </div>
           <div className="card-body">{item.text}</div>
+          <button className="btn btn-ghost btn-outline btn-primary w-6/12 mx-auto">
+            Play Game
+          </button>
         </div>
       ))}
       {/* <div

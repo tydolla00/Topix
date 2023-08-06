@@ -1,9 +1,9 @@
 import { BiSolidCameraMovie as Movie } from "react-icons/bi";
 import { PiTelevisionSimpleFill as TV } from "react-icons/pi";
 import { RiMickeyFill as Mickey } from "react-icons/ri";
-import Moon from "../assets/4k-star-wars-battlefront-helmet-btxw0mp8avfl87n5.jpg";
-import { ParallaxBanner, useParallax } from "react-scroll-parallax";
-import Space from "../assets/space.png";
+// import Moon from "../assets/4k-star-wars-battlefront-helmet-btxw0mp8avfl87n5.jpg";
+import { useParallax } from "react-scroll-parallax";
+// import Space from "../assets/space.png";
 import { useEffect, useRef } from "react";
 // @ts-ignore
 import Typed from "typed.js";

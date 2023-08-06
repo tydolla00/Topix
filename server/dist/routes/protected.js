@@ -62,7 +62,13 @@ router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function*
     };
     const hashedPassword = yield bcrypt.hash(user.password, 10);
     user.password = hashedPassword;
-    yield (0, db_1.queryNoCall)("INSERT INTO USERS(username,email,password,first_name,last_name) VALUES($1,$2,$3,$4,$5) RETURNING *", Object.values(user));
+    try {
+        yield (0, db_1.queryNoCall)("INSERT INTO USERS(username,email,password,first_name,last_name) VALUES($1,$2,$3,$4,$5) RETURNING *", Object.values(user));
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(404).send(`Error ${error.detail.substring(4)}`);
+    }
     const expirationDate = Math.floor(Date.now() / 1000 + 60 * 60);
     const accessToken = jwtCreate(user.username, expirationDate);
     res.json({
@@ -77,6 +83,8 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         username,
     ]);
     const user = queryResult.rows[0];
+    if (!user)
+        return res.status(401).send("Invalid Username or Password");
     const isEqual = yield bcrypt.compare(req.body.password, user.password);
     if (!isEqual)
         return res.status(401).send({ error: "Invalid username or password" });

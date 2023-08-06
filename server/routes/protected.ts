@@ -31,10 +31,15 @@ router.post("/signup", async (req, res) => {
   const hashedPassword = await bcrypt.hash(user.password, 10);
   user.password = hashedPassword;
 
-  await query(
-    "INSERT INTO USERS(username,email,password,first_name,last_name) VALUES($1,$2,$3,$4,$5) RETURNING *",
-    Object.values(user)
-  );
+  try {
+    await query(
+      "INSERT INTO USERS(username,email,password,first_name,last_name) VALUES($1,$2,$3,$4,$5) RETURNING *",
+      Object.values(user)
+    );
+  } catch (error: any) {
+    console.log(error);
+    return res.status(404).send(`Error ${error.detail.substring(4)}`);
+  }
 
   const expirationDate = Math.floor(Date.now() / 1000 + 60 * 60);
   const accessToken = jwtCreate(user.username, expirationDate);
@@ -51,6 +56,7 @@ router.post("/login", async (req, res) => {
     username,
   ]);
   const user: User = queryResult.rows[0];
+  if (!user) return res.status(401).send("Invalid Username or Password");
 
   const isEqual = await bcrypt.compare(req.body.password, user.password);
   if (!isEqual)

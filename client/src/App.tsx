@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./App.css";
 import Home from "./pages/home";
-import ErrorPage from "./components/errorpage";
+import ErrorPage from "./errors/errorpage";
 import Navbar from "./components/navbar";
 import Contact from "./pages/contact";
 import Quizzes from "./pages/quizzes";
@@ -17,9 +17,11 @@ import Profile from "./pages/profiles";
 import { action as LoginAction } from "./data/actions";
 import { useAuth } from "./hooks/useAuth";
 import { themeChange } from "theme-change";
+import { ErrorAlert } from "./components/alert";
 
 function App() {
   const { login } = useAuth();
+
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.add(localStorage.theme);
@@ -61,6 +63,13 @@ function App() {
           path: "login",
           element: <Login />,
           action: LoginAction(login),
+          // Switch on Error.status in component.
+          errorElement: (
+            <>
+              <ErrorAlert />
+              <Login />
+            </>
+          ),
         },
         {
           path: "register",
