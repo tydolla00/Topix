@@ -19,13 +19,13 @@ export default function Navbar() {
   return (
     <div className="overflow-x-hidden">
       <nav className="navbar bg-base-100">
-        <div className="navbar-start text-lg sm:text-2xl font-extrabold normal-case btn btn-ghost flex-auto">
+        <div className="navbar-start text-sm sm:text-2xl font-extrabold normal-case flex-auto">
           <span className="bg-gradient-to-r from-base-content to-70% to-primary text-transparent bg-clip-text">
             Topix
           </span>
         </div>
-        <div className="navbar-center text-md flex-none">
-          <ul className="menu menu-horizontal px-1 md:text-lg">
+        <div className="navbar-center flex-none">
+          <ul className="menu menu-horizontal px-1 sm:text-lg text-xs">
             <li>
               <Link to="/home">Home</Link>
             </li>
@@ -67,7 +67,7 @@ export default function Navbar() {
             </>
           )}
           <button
-            className="btn btn-ghost btn-circle lg:ml-6"
+            className="btn btn-ghost btn-circle lg:ml-6 sm:block hidden"
             onClick={() => {
               let modal: any = window;
               modal.search_modal.showModal();
@@ -97,12 +97,12 @@ export default function Navbar() {
               </div>
             ) : (
               <label
-                className="btn btn-circle group swap swap-active swap-rotate"
+                className="btn btn-circle btn-ghost group swap swap-active swap-rotate"
                 tabIndex={0}
               >
                 {/* hamburger icon */}
                 <svg
-                  className="group-focus-within:hidden fill-current"
+                  className="group-focus-within:hidden h-7 w-7 fill-current"
                   xmlns="http://www.w3.org/2000/svg"
                   width="32"
                   height="32"
@@ -145,6 +145,15 @@ export default function Navbar() {
                   </li>
                   <li>
                     <Link to="/register">Register</Link>
+                  </li>
+                  <li
+                    className="sm:hidden"
+                    onClick={() => {
+                      let modal: any = window;
+                      modal.search_modal.showModal();
+                    }}
+                  >
+                    <button>Search</button>
                   </li>
                 </>
               )}
