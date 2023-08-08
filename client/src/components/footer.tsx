@@ -3,18 +3,20 @@ export default function Footer() {
     <footer className="mt-3 footer p-10 bg-base-300 text-base-content">
       <div>
         <span className="footer-title">Services</span>
-        <a className="link link-hover">Home</a>
-        <a className="link link-hover">Quizzes</a>
-        <a className="link link-hover">Topics</a>
-        <a className="link link-hover">Contact</a>
+        <a href="/home" className="link link-hover">
+          Home
+        </a>
+        <a href="/quizzes" className="link link-hover">
+          Quizzes
+        </a>
+        <a href="/topix" className="link link-hover">
+          Topics
+        </a>
+        <a href="/contact" className="link link-hover">
+          Contact
+        </a>
       </div>
-      <div>
-        <span className="footer-title">Company</span>
-        <a className="link link-hover">About us</a>
-        <a className="link link-hover">Contact</a>
-        <a className="link link-hover">Jobs</a>
-        <a className="link link-hover">Press kit</a>
-      </div>
+
       <div>
         <span className="footer-title">Social</span>
         <div className="grid grid-flow-col gap-4">

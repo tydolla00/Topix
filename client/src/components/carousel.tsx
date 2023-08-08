@@ -1,0 +1,45 @@
+import Cartoons from "../assets/cartoons.jpg";
+import Spongebob from "../assets/spongebob.png";
+import HarryPotter from "../assets/harry-potter.png";
+import StarWars from "../assets/4k-star-wars-battlefront-helmet-btxw0mp8avfl87n5.jpg";
+
+export const Carousel = () => {
+  return (
+    <>
+      <div className="carousel h-32 sm:h-80 w-full">
+        <div id="item1" className="carousel-item w-full">
+          <img
+            src={HarryPotter}
+            className="w-full object-cover object-center"
+          />
+        </div>
+        <div id="item2" className="carousel-item w-full">
+          <img src={Spongebob} className="w-full object-cover object-center" />
+        </div>
+        <div id="item3" className="carousel-item w-full">
+          <img src={Cartoons} className="w-full object-cover object-center" />
+        </div>
+        <div
+          id="item4"
+          className="carousel-item w-full object-cover object-center"
+        >
+          <img src={StarWars} className="w-full" />
+        </div>
+      </div>
+      <div className="flex justify-center w-full py-2 gap-2">
+        <a href="#item1" className="btn btn-xs">
+          1
+        </a>
+        <a href="#item2" className="btn btn-xs">
+          2
+        </a>
+        <a href="#item3" className="btn btn-xs">
+          3
+        </a>
+        <a href="#item4" className="btn btn-xs">
+          4
+        </a>
+      </div>
+    </>
+  );
+};
