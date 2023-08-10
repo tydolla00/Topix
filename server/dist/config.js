@@ -17,6 +17,7 @@ const getConfig = () => {
         PGPASSWORD: process.env.PGPASSWORD,
         API_KEY: process.env.API_KEY,
         SECRET_KEY: process.env.SECRET_KEY,
+        GOOGLE_SERVICE_KEY: process.env.GOOGLE_SERVICE_KEY,
     };
 };
 // Throwing an Error if any field was undefined we don't

@@ -18,6 +18,7 @@ import { action as LoginAction } from "./data/actions";
 import { useAuth } from "./hooks/useAuth";
 import { themeChange } from "theme-change";
 import { ErrorAlert } from "./components/alert";
+import Movies from "./pages/movies";
 
 function App() {
   const { login } = useAuth();
@@ -42,23 +43,15 @@ function App() {
             </ParallaxProvider>
           ),
         },
-        {
-          path: "home",
-          element: <Home />,
-        },
-        {
-          path: "quizzes",
-          element: <Quizzes />,
-        },
+        { path: "home", element: <Home /> },
+        { path: "movies", element: <Movies /> },
+        { path: "quizzes", element: <Quizzes /> },
         {
           path: "topics",
           element: <Topics />,
           loader: getUsers,
         },
-        {
-          path: "contact",
-          element: <Contact />,
-        },
+        { path: "contact", element: <Contact /> },
         {
           path: "login",
           element: <Login />,
@@ -71,10 +64,7 @@ function App() {
             </>
           ),
         },
-        {
-          path: "register",
-          element: <Register />,
-        },
+        { path: "register", element: <Register /> },
         {
           element: <ProtectedLayout />, // Protected Routes
           children: [

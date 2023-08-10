@@ -2,14 +2,13 @@ import { RegisterInputForm } from "../components/input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useAuth } from "../hooks/useAuth";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { ErrorAlert } from "../components/alert";
 
 export default function Register() {
-  const { login } = useAuth();
+  const navigate = useNavigate();
   const [error, setError] = useState<string | any>("");
 
   // TODO Work with loading state. Loading sign.
@@ -100,10 +99,7 @@ export default function Register() {
       .catch((err) => {
         setError(err);
       });
-    if (res && !Array.isArray(res)) {
-      login(res);
-      return redirect("/home");
-    }
+    if (res && !Array.isArray(res)) return navigate("/home");
   };
   return (
     <>

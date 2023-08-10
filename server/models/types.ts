@@ -27,7 +27,6 @@ export type Tv = {
   timeline: Date;
 };
 
-export type Users = User[];
 export type User = {
   id?: number;
   username: string;
@@ -35,4 +34,13 @@ export type User = {
   password: string;
   firstName: string;
   lastName: string;
+};
+
+export type Contact = {
+  id?: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  subject: string;
+  message: string;
 };
