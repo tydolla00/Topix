@@ -16,6 +16,7 @@ interface ENV {
   PGPASSWORD: string | undefined;
   API_KEY: string | undefined;
   SECRET_KEY: string | undefined;
+  GOOGLE_SERVICE_KEY: string | undefined;
 }
 
 interface Config {
@@ -27,6 +28,7 @@ interface Config {
   PGPASSWORD: string;
   API_KEY: string;
   SECRET_KEY: string;
+  GOOGLE_SERVICE_KEY: string;
 }
 
 // Loading process.env as ENV interface
@@ -41,6 +43,7 @@ const getConfig = (): ENV => {
     PGPASSWORD: process.env.PGPASSWORD,
     API_KEY: process.env.API_KEY,
     SECRET_KEY: process.env.SECRET_KEY,
+    GOOGLE_SERVICE_KEY: process.env.GOOGLE_SERVICE_KEY,
   };
 };
 
