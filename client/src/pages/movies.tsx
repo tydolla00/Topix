@@ -7,6 +7,7 @@ export default function Movies() {
 
   const [file, setFile] = useState<Blob | any>();
   const [uploadedFile, setUploadedFile] = useState();
+  const [image, setImage] = useState();
   const [error, setError] = useState<string>();
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -33,6 +34,32 @@ export default function Movies() {
       .catch((err: AxiosError) => {
         console.error("Error uploading file: ", err);
         setError(err.message);
+      })
+      .finally(() => {
+        axios
+          .get(
+            "http://localhost:8000/auth/pic/1jIKeyV3_TeV1KOziG354yTBy8gtqEyus",
+            {
+              headers: {
+                Authorization: `Bearer ${authData.token}`,
+                // responseType: "blob",
+                "content-type": "image/jpeg",
+              },
+            }
+          )
+          .then(
+            // @ts-ignore
+            axios.spread((...responses) => {
+              responses.map((res: any) => {
+                console.log(URL.createObjectURL(res.data));
+                setImage(res);
+              });
+            })
+          );
+        // .then((blob) => {
+        //   const url = URL.createObjectURL(blob);
+        //   setImage(url);
+        // });
       });
   };
   const handleChange = (e: any) => {
@@ -51,6 +78,7 @@ export default function Movies() {
       </form>
       {uploadedFile && <img src={uploadedFile} alt="Uploaded file" />}
       {error && <p>Error uploading file: {error} </p>}
+      {image && <img className="w-48 h-48" src={image} />}
     </>
   );
 }
