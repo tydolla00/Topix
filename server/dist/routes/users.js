@@ -22,12 +22,18 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.send(users);
 }));
 router.get("/contact", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const contact = {
-        first_name: req.body.firstName,
-        last_name: req.body.lastName,
-        email: req.body.email,
-        subject: req.body.subject,
-        message: req.body.message,
-    };
-    const queryResult = yield (0, db_1.queryNoCall)("INSERT INTO CONTACT(first_name,last_name, email,subject, email) VALUES($1,$2,$3,$4,$5)", Object.values(contact));
+    try {
+        const contact = {
+            first_name: req.body.firstName,
+            last_name: req.body.lastName,
+            email: req.body.email,
+            subject: req.body.subject,
+            message: req.body.message,
+        };
+        yield (0, db_1.queryNoCall)("INSERT INTO CONTACT(first_name,last_name, email,subject, email) VALUES($1,$2,$3,$4,$5)", Object.values(contact));
+        return res.send("Your response has been submitted!");
+    }
+    catch (error) {
+        res.status(500).send("Oops, something unexpected happened.");
+    }
 }));

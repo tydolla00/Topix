@@ -6,8 +6,9 @@ import * as jwt from "jsonwebtoken";
 import config from "../config";
 import { queryNoCall as query } from "../db/db";
 import multer from "multer";
-import { uploadFile } from "../googledrive";
+import { getFile, uploadFile } from "../googledrive";
 import express from "express";
+import fs from "fs";
 
 const router: ExpressRouter = new (Router as any)();
 export default router;
@@ -75,17 +76,32 @@ router.post("/login", async (req, res) => {
     token: accessToken,
     expiry: expirationDate,
     firstName: user.firstName,
+    profilePic: user.profile_picture,
   });
 });
 
 router.post("/upload", upload.single("file"), async (req: any, res: any) => {
   try {
+    console.log(req.user);
     const { file } = req;
-    await uploadFile(file);
+    const driveId = await uploadFile(file);
+    // const queryResult = await query("INSERT INTO ");
     return res.status(200).send("Form Submitted");
   } catch (error) {
     // return res.status(500).send("Something went wrong");
     console.log(error);
+  }
+});
+
+router.get("/pic/:fileId", async (req: any, res) => {
+  try {
+    const { fileId } = req.params;
+    const file = await getFile(fileId);
+    const stream = fs.createReadStream(file);
+    res.set("Content-Type", "image/jpeg");
+    stream.pipe(res);
+  } catch (error) {
+    res.status(500).send(error);
   }
 });
 

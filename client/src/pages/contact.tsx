@@ -1,10 +1,7 @@
 import { InputForm } from "../components/input";
-import useFetch from "../hooks/useFetch";
 import Ty from "../assets/ty.png";
 
 export default function Contact() {
-  const { data, loading, error } = useFetch("Say", "GET");
-  console.log({ data }, { loading }, { error });
   return (
     <>
       <div className="max-w-[80vw] my-0 mx-auto hero">

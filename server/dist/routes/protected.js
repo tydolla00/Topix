@@ -43,6 +43,7 @@ const db_1 = require("../db/db");
 const multer_1 = __importDefault(require("multer"));
 const googledrive_1 = require("../googledrive");
 const express_1 = __importDefault(require("express"));
+const fs_1 = __importDefault(require("fs"));
 const router = new express_promise_router_1.default();
 exports.default = router;
 const upload = (0, multer_1.default)();
@@ -100,17 +101,32 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         token: accessToken,
         expiry: expirationDate,
         firstName: user.firstName,
+        profilePic: user.profile_picture,
     });
 }));
 router.post("/upload", upload.single("file"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log(req.user);
         const { file } = req;
-        yield (0, googledrive_1.uploadFile)(file);
+        const driveId = yield (0, googledrive_1.uploadFile)(file);
+        // const queryResult = await query("INSERT INTO ");
         return res.status(200).send("Form Submitted");
     }
     catch (error) {
         // return res.status(500).send("Something went wrong");
         console.log(error);
+    }
+}));
+router.get("/pic/:fileId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { fileId } = req.params;
+        const file = yield (0, googledrive_1.getFile)(fileId);
+        const stream = fs_1.default.createReadStream(file);
+        res.set("Content-Type", "image/jpeg");
+        stream.pipe(res);
+    }
+    catch (error) {
+        res.status(500).send(error);
     }
 }));
 const jwtValidate = (req, res, next) => {

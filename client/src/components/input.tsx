@@ -49,6 +49,17 @@ export const RegisterInputForm = ({
     </>
   );
 };
+
+export const FileInput = ({ ...props }) => {
+  return (
+    <input
+      name="file"
+      type="file"
+      className="file-input w-full max-w-xs"
+      {...props}
+    />
+  );
+};
 export interface RegisterProps extends InputFormProps {
   name: string;
   type: "password" | "text";

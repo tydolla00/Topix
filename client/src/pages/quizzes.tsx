@@ -1,4 +1,4 @@
-import QuizCard from "../components/card";
+import { QuizCard } from "../components/card";
 
 export default function Quizzes() {
   return (

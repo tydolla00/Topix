@@ -27,7 +27,7 @@ export default function ErrorPage() {
 
   console.error(error);
   return (
-    <div className="flex justify-center items-center h-screen text-white text-center">
+    <div className="flex justify-center items-center h-screen text-center">
       <div>
         <h1 className="text-4xl mb-4">Oops an error occured!</h1>
         <h1 className="text-4xl mb-4">

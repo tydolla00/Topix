@@ -29,11 +29,13 @@ export type Tv = {
 
 export type User = {
   id?: number;
+  users_id?: number;
   username: string;
   email: string;
   password: string;
   firstName: string;
   lastName: string;
+  profile_picture?: string;
 };
 
 export type Contact = {
