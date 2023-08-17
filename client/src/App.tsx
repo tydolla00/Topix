@@ -19,6 +19,8 @@ import { useAuth } from "./hooks/useAuth";
 import { themeChange } from "theme-change";
 import { ErrorAlert } from "./components/alert";
 import Movies from "./pages/movies";
+import Television from "./pages/tv";
+import Gaming from "./pages/gaming";
 
 function App() {
   const { login } = useAuth();
@@ -44,13 +46,15 @@ function App() {
           ),
         },
         { path: "home", element: <Home /> },
-        { path: "movies", element: <Movies /> },
         { path: "quizzes", element: <Quizzes /> },
         {
           path: "topics",
           element: <Topics />,
           loader: getUsers,
         },
+        { path: "movies", element: <Movies /> },
+        { path: "tv", element: <Television /> },
+        { path: "gaming", element: <Gaming /> },
         { path: "contact", element: <Contact /> },
         {
           path: "login",
@@ -67,12 +71,7 @@ function App() {
         { path: "register", element: <Register /> },
         {
           element: <ProtectedLayout />, // Protected Routes
-          children: [
-            {
-              path: "/profile",
-              element: <Profile />,
-            },
-          ],
+          children: [{ path: "/profile", element: <Profile /> }],
         },
       ],
     },
