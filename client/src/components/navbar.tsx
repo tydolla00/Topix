@@ -67,7 +67,7 @@ export default function Navbar() {
             </>
           )}
           <button
-            className="btn btn-ghost btn-circle lg:ml-6 sm:block hidden"
+            className="lg:mx-6 sm:mx-3 sm:block hidden "
             onClick={() => {
               let modal: any = window;
               modal.search_modal.showModal();

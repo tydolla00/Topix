@@ -107,7 +107,7 @@ export default function Movies() {
       <div className="flex flex-wrap gap-2">
         <div className="basis-1/3">
           <TopixCard
-            description="Nickelodeon had many great specials, which one was your favorite"
+            description="So many good choices..."
             title="Best Nickelodeon Movie"
             img={Nickelodeon}
             url=""

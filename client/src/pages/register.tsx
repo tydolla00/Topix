@@ -1,15 +1,17 @@
-import { RegisterInputForm } from "../components/input";
+import { ValidatedFormInput } from "../components/input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useState } from "react";
-import { ErrorAlert } from "../components/alert";
+import { useToast } from "@/shadcn/ui/use-toast";
+import { Toaster } from "@/shadcn/ui/toaster";
+import { useMyFetch } from "@/hooks/useFetch";
 
 export default function Register() {
-  const navigate = useNavigate();
-  const [error, setError] = useState<string | any>("");
+  const { toast } = useToast();
+  const { fetchData } = useMyFetch({
+    url: "http://localhost:8000/auth/signup",
+    method: "POST",
+  });
 
   // TODO Work with loading state. Loading sign.
   // * const [isLoading, setIsLoading] = useState(false);
@@ -76,35 +78,23 @@ export default function Register() {
       placeholder: "*****",
     },
   ];
-  const onSubmit = async (data: any, e: any) => {
-    setError("");
-    e.preventDefault();
+  const onSubmit = async (data: any) => {
     const firstName = data.firstName.replaceAll(" ", "").toLowerCase();
     const lastName = data.lastName.replaceAll(" ", "").toLowerCase();
     const username = data.username.replaceAll(" ", "").toLowerCase();
     const password = data.password;
     const email = data.email.toLowerCase();
-
-    const res = await axios
-      .post("http://localhost:8000/auth/signup", {
-        firstName,
-        lastName,
-        username,
-        password,
-        email,
-      })
-      .then((res) => {
-        return res.data;
-      })
-      .catch((err) => {
-        setError(err);
-      });
-    if (res && !Array.isArray(res)) return navigate("/home");
+    try {
+      await fetchData({ firstName, lastName, username, password, email });
+      toast({ description: "Successfully signed up" });
+    } catch (error: any) {
+      toast({ variant: "destructive", description: error.response.data });
+    }
   };
   return (
     <>
       <div className="max-w-[80vw] my-0 mx-auto">
-        {error && <ErrorAlert customError={error.response.data} />}
+        <Toaster />
         <div className="hero-content flex-col md:flex-row">
           <div>
             <h2 className="text-3xl text-center mt-3">Create your account</h2>
@@ -115,7 +105,7 @@ export default function Register() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex my-3">
               <div className="flex flex-col">
-                <RegisterInputForm
+                <ValidatedFormInput
                   name="firstName"
                   label="First Name"
                   placeholder="Enter your first name"
@@ -130,7 +120,7 @@ export default function Register() {
                 </div>
               </div>
               <div className="flex flex-col">
-                <RegisterInputForm
+                <ValidatedFormInput
                   name="lastName"
                   label="Last Name"
                   placeholder="Enter your last name"
@@ -147,7 +137,7 @@ export default function Register() {
             </div>
             {data.map((item) => (
               <div key={item.name} className="flex flex-col my-3">
-                <RegisterInputForm
+                <ValidatedFormInput
                   name={item.name}
                   label={item.label}
                   placeholder={item.placeholder}
