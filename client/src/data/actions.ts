@@ -8,8 +8,6 @@ export const action =
   async ({ request }: ActionFunctionArgs) => {
     const formData = await request.formData();
     const body = Object.fromEntries(formData);
-    console.log({ body });
-    console.log(body);
     const data = await axios
       .post("http://localhost:8000/auth/login", body)
       .then((res) => {
@@ -18,7 +16,7 @@ export const action =
       .catch((err: AxiosError) => {
         const error = err.response?.data as string;
         console.error(error);
-        throw new Error(error || "An Error occurred p");
+        throw new Error(error || "An Error occurred");
       });
     if (data && !Array.isArray(data)) {
       login(data);

@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
   return res.send(users);
 });
 
-router.get("/contact", async (req, res) => {
+router.post("/contact", async (req, res) => {
   try {
     const contact: Contact = {
       first_name: req.body.firstName,
@@ -21,12 +21,14 @@ router.get("/contact", async (req, res) => {
       subject: req.body.subject,
       message: req.body.message,
     };
+    console.log({ contact });
     await query(
-      "INSERT INTO CONTACT(first_name,last_name, email,subject, email) VALUES($1,$2,$3,$4,$5)",
+      "INSERT INTO CONTACT(first_name,last_name, email,subject, message) VALUES($1,$2,$3,$4,$5)",
       Object.values(contact)
     );
     return res.send("Your response has been submitted!");
   } catch (error) {
+    console.log(error);
     res.status(500).send("Oops, something unexpected happened.");
   }
 });

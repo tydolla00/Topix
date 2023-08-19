@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .label-required {
+    @apply label justify-start after:content-['*'] after:ml-0.5 after:text-red-500;
+  }
+}

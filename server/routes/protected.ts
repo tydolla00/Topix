@@ -59,17 +59,19 @@ router.post("/signup", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const username = req.body.username;
-  const queryResult = await query("SELECT * FROM USERS WHERE username = $1", [
-    username,
-  ]);
+  const queryResult = await query(
+    "SELECT * FROM USERS WHERE username = $1 OR email = $1",
+    [username]
+  );
   const user: User = queryResult.rows[0];
   console.log(user);
-  if (!user) return res.status(401).send("Invalid Username or Password");
+  if (!user) return res.status(401).send("Username or email does not exist");
 
   const isEqual = await bcrypt.compare(req.body.password, user.password);
-  if (!isEqual)
-    return res.status(401).send({ error: "Invalid username or password" });
-
+  if (!isEqual) {
+    return res.status(401).send("Invalid username or password");
+    // throw new Error("Invalid username or password");
+  }
   const expirationDate = Date.now() / 1000 + 60 * 60;
   const accessToken = jwtCreate(username, expirationDate);
   return res.json({

@@ -14,17 +14,12 @@ import Register from "./pages/register";
 import { getUsers } from "./data/loaders";
 import { ProtectedLayout } from "./components/protectedRoute";
 import Profile from "./pages/profiles";
-import { action as LoginAction } from "./data/actions";
-import { useAuth } from "./hooks/useAuth";
 import { themeChange } from "theme-change";
-import { ErrorAlert } from "./components/alert";
 import Movies from "./pages/movies";
 import Television from "./pages/tv";
 import Gaming from "./pages/gaming";
 
 function App() {
-  const { login } = useAuth();
-
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.add(localStorage.theme);
@@ -59,14 +54,6 @@ function App() {
         {
           path: "login",
           element: <Login />,
-          action: LoginAction(login),
-          // Switch on Error.status in component.
-          errorElement: (
-            <>
-              <ErrorAlert />
-              <Login />
-            </>
-          ),
         },
         { path: "register", element: <Register /> },
         {
