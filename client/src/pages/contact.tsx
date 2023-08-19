@@ -27,15 +27,15 @@ export default function Contact() {
   );
 }
 
-const SelectOption = () => {
-  return (
-    <Select>
-      <SelectTrigger>
-        <SelectValue placeholder="Select an option" />
-      </SelectTrigger>
-    </Select>
-  );
-};
+// const SelectOption = () => {
+//   return (
+//     <Select>
+//       <SelectTrigger>
+//         <SelectValue placeholder="Select an option" />
+//       </SelectTrigger>
+//     </Select>
+//   );
+// };
 
 const ContactForm = () => {
   const { state, fetchData } = useMyFetch({
