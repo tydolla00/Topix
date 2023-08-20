@@ -8,7 +8,7 @@ import { useMyFetch } from "@/hooks/useFetch";
 
 export default function Register() {
   const { toast } = useToast();
-  const { fetchData } = useMyFetch({
+  const { state, fetchData } = useMyFetch({
     url: "http://localhost:8000/auth/signup",
     method: "POST",
   });
@@ -151,6 +151,7 @@ export default function Register() {
             <button
               className="btn btn-outline btn-primary mx-auto w-full"
               type="submit"
+              disabled={state.isLoading}
             >
               Submit
             </button>

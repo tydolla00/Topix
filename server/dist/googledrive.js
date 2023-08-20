@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFile = exports.uploadFile = exports.getDriveService = void 0;
+exports.deleteFile = exports.getFile = exports.uploadFile = exports.getDriveService = void 0;
 const config_1 = __importDefault(require("./config"));
 const { google } = require("googleapis");
+// import { google } from "googleapis"; use for checking types
 const stream = require("stream");
 // https://www.labnol.org/google-drive-api-upload-220412
 const SCOPES = ["https://www.googleapis.com/auth/drive"];
@@ -30,10 +31,11 @@ const getDriveService = () => {
 };
 exports.getDriveService = getDriveService;
 const drive = (0, exports.getDriveService)();
-const uploadFile = (fileObject) => __awaiter(void 0, void 0, void 0, function* () {
+const uploadFile = (fileObject, user) => __awaiter(void 0, void 0, void 0, function* () {
     const folderId = "1oQnIyJhE5TcF6ICumRWBv6JSZMhDOX8N";
     const bufferStream = new stream.PassThrough();
     bufferStream.end(fileObject.buffer);
+    console.log({ fileObject });
     const { data } = yield drive.files.create({
         resource: {
             name: fileObject.name,
@@ -44,11 +46,12 @@ const uploadFile = (fileObject) => __awaiter(void 0, void 0, void 0, function* (
             body: bufferStream,
         },
         requestBody: {
-            name: fileObject.name,
+            name: `${user}`,
             parents: ["1oQnIyJhE5TcF6ICumRWBv6JSZMhDOX8N"],
         },
         fields: "id,name",
     });
+    console.log({ data });
     console.log(`Uploaded file ${data.name} ${data.id}`);
     return data.id;
 });
@@ -56,6 +59,7 @@ exports.uploadFile = uploadFile;
 const getFile = (fileId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const res = yield drive.files.get({ fileId: fileId, alt: "media" }, { responseType: "stream", encoding: null });
+        console.log(res);
         return res;
         // const imageType = res.headers["content-type"];
         // console.log(imageType);
@@ -69,3 +73,7 @@ const getFile = (fileId) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getFile = getFile;
+const deleteFile = (fileId) => __awaiter(void 0, void 0, void 0, function* () {
+    yield drive.files.delete({ fileId: fileId });
+});
+exports.deleteFile = deleteFile;

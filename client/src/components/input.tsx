@@ -48,6 +48,7 @@ export const ValidatedFormInput = ({
 export const FileInput = ({ ...props }) => {
   return (
     <input
+      accept="image/png, image/gif, image/jpeg"
       name="file"
       type="file"
       className="file-input w-full max-w-xs"

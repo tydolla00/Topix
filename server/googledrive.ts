@@ -1,5 +1,6 @@
 import config from "./config";
 const { google } = require("googleapis");
+// import { google } from "googleapis"; use for checking types
 const stream = require("stream");
 import fs from "fs";
 
@@ -16,16 +17,18 @@ export const getDriveService = () => {
     credentials: credential,
     scopes: SCOPES,
   });
+
   const driveService = google.drive({ version: "v3", auth });
   return driveService;
 };
 
 const drive = getDriveService();
 
-export const uploadFile = async (fileObject: any) => {
+export const uploadFile = async (fileObject: any, user: string) => {
   const folderId = "1oQnIyJhE5TcF6ICumRWBv6JSZMhDOX8N";
   const bufferStream = new stream.PassThrough();
   bufferStream.end(fileObject.buffer);
+  console.log({ fileObject });
   const { data } = await drive.files.create({
     resource: {
       name: fileObject.name,
@@ -36,11 +39,12 @@ export const uploadFile = async (fileObject: any) => {
       body: bufferStream,
     },
     requestBody: {
-      name: fileObject.name,
+      name: `${user}`,
       parents: ["1oQnIyJhE5TcF6ICumRWBv6JSZMhDOX8N"],
     },
     fields: "id,name",
   });
+  console.log({ data });
   console.log(`Uploaded file ${data.name} ${data.id}`);
   return data.id;
 };
@@ -51,7 +55,10 @@ export const getFile = async (fileId: string) => {
       { fileId: fileId, alt: "media" },
       { responseType: "stream", encoding: null }
     );
+
+    console.log(res);
     return res;
+
     // const imageType = res.headers["content-type"];
     // console.log(imageType);
     // const base64 = Buffer.from(res.data, "utf8").toString("base64");
@@ -61,6 +68,10 @@ export const getFile = async (fileId: string) => {
     console.error(error);
     throw new Error("Error receiving file");
   }
+};
+
+export const deleteFile = async (fileId: string) => {
+  await drive.files.delete({ fileId: fileId });
 };
 
 type GoogleCreds = {

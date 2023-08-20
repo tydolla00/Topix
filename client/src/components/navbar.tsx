@@ -1,23 +1,34 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 // import DarkModeSwitcher from "./darkmodeswitcher";
-import Spongebob from "../assets/spongebob.png";
 import Footer from "./footer";
 import { useAuth } from "../hooks/useAuth";
+import ProfilePicture from "./profilePicture";
+import { Toaster } from "@/shadcn/ui/toaster";
+import { useToast } from "@/shadcn/ui/use-toast";
+import { ToastAction } from "@radix-ui/react-toast";
 
 export default function Navbar() {
+  const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
   const { authData, logout } = useAuth();
   useEffect(() => {
     console.log(authData?.expiry);
     console.log(Date.now());
-    if (authData && Number(authData.expiry) * 1000 <= new Date().getTime())
+    if (authData && Number(authData.expiry) * 1000 <= new Date().getTime()) {
       logout();
+      toast({
+        title: "You have been logged out",
+        variant: "destructive",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    }
   }, [location.pathname]);
 
   return (
     <div className="overflow-x-hidden">
+      <Toaster />
       <nav className="navbar bg-base-100">
         <div className="navbar-start text-sm sm:text-2xl font-extrabold normal-case flex-auto">
           <span className="bg-gradient-to-r from-base-content to-70% to-primary text-transparent bg-clip-text">
@@ -92,7 +103,12 @@ export default function Navbar() {
             {authData ? (
               <div tabIndex={0} className="avatar online btn btn-circle">
                 <div className="rounded-full w-10">
-                  <img src={Spongebob} />
+                  {authData.profile_picture ? (
+                    <ProfilePicture />
+                  ) : (
+                    //TODO Handle null profile pic here, skeleton.
+                    <p>T</p>
+                  )}
                 </div>
               </div>
             ) : (
