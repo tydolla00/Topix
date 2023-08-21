@@ -29,7 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cors_1 = __importDefault(require("cors"));
 const dotenv = __importStar(require("dotenv"));
 const express_1 = __importDefault(require("express"));
-const mountRoutes_1 = __importDefault(require("./routes/mountRoutes"));
+const mountRoutes_1 = __importDefault(require("./api/mountRoutes"));
 const config_1 = __importDefault(require("./config"));
 // elephantSQL for online hosting
 // https://neon.tech/pricing
