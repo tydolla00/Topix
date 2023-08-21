@@ -2,7 +2,7 @@ import cors from "cors";
 import { Express } from "express";
 import * as dotenv from "dotenv";
 import express from "express";
-import mountRoutes from "./routes/mountRoutes";
+import mountRoutes from "./api/mountRoutes";
 import { queryNoCall } from "./db/db";
 import config from "./config";
 
