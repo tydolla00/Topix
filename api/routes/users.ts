@@ -6,6 +6,10 @@ import { Contact, User } from "../models/types";
 const router: ExpressRouter = new (Router as any)();
 export default router;
 
+router.get("/hello", (req, res) => {
+  res.send("Hello World Worked");
+});
+
 router.get("/", async (req, res) => {
   const queryResult = await query("SELECT * FROM USERS");
   const users: User[] = queryResult.rows;
