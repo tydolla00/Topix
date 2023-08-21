@@ -43,7 +43,7 @@ export default function Login() {
               <InputForm
                 name="username"
                 placeholder="Enter your username"
-                label="Username"
+                label="Username or Email Address"
                 register={register}
               />
             </div>

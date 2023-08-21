@@ -2,13 +2,15 @@ import { createContext, useContext, useMemo } from "react";
 
 import { useLocalStorage } from "./useLocalStorage";
 
+export type UnionUserAuthData = UserAuthData | null;
 export interface UserAuthData {
   expiry: string;
   token: string;
   firstName: string;
+  profile_picture: string;
 }
 export interface AuthContextType {
-  authData: UserAuthData;
+  authData: UnionUserAuthData;
   login: (authData: UserAuthData, callback?: VoidFunction) => Promise<void>;
   logout: (callback?: VoidFunction) => Promise<void>;
 }
@@ -20,7 +22,7 @@ export const AuthProvider = ({
   children,
 }: {
   children: React.ReactNode;
-  storedAuthData: any;
+  storedAuthData: UserAuthData | null;
 }) => {
   const [authData, setAuthData] = useLocalStorage("user", storedAuthData);
 

@@ -43,7 +43,6 @@ const db_1 = require("../db/db");
 const multer_1 = __importDefault(require("multer"));
 const googledrive_1 = require("../googledrive");
 const express_1 = __importDefault(require("express"));
-const fs_1 = __importDefault(require("fs"));
 const router = new express_promise_router_1.default();
 exports.default = router;
 const upload = (0, multer_1.default)();
@@ -63,70 +62,89 @@ router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function*
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
+        first_name: req.body.firstName,
+        last_name: req.body.lastName,
     };
     const hashedPassword = yield bcrypt.hash(user.password, 10);
     user.password = hashedPassword;
     try {
         yield (0, db_1.queryNoCall)("INSERT INTO USERS(username,email,password,first_name,last_name) VALUES($1,$2,$3,$4,$5) RETURNING *", Object.values(user));
+        return res.send(200).send("Success");
     }
     catch (error) {
         console.log(error);
         return res.status(404).send(`Error ${error.detail.substring(4)}`);
     }
-    const expirationDate = Math.floor(Date.now() / 1000 + 60 * 60);
-    const accessToken = jwtCreate(user.username, expirationDate);
-    return res.json({
-        accessToken: accessToken,
-        expiry: expirationDate,
-        firstName: user.firstName,
-    });
 }));
 router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const username = req.body.username;
-    const queryResult = yield (0, db_1.queryNoCall)("SELECT * FROM USERS WHERE username = $1 OR email = $1", [username]);
-    const user = queryResult.rows[0];
-    console.log(user);
-    if (!user)
-        return res.status(401).send("Username or email does not exist");
-    const isEqual = yield bcrypt.compare(req.body.password, user.password);
-    if (!isEqual) {
-        return res.status(401).send("Invalid username or password");
-        // throw new Error("Invalid username or password");
+    try {
+        const username = req.body.username;
+        const queryResult = yield (0, db_1.queryNoCall)("SELECT * FROM USERS WHERE username = $1 OR email = $1", [username]);
+        const user = queryResult.rows[0];
+        console.log(user);
+        if (!user)
+            return res.status(401).send("Username or email does not exist");
+        const isEqual = yield bcrypt.compare(req.body.password, user.password);
+        if (!isEqual) {
+            console.log("Error: Invalid Username or Password");
+            return res.status(401).send("Invalid username or password");
+        }
+        const expirationDate = Date.now() / 1000 + 60 * 60;
+        const accessToken = jwtCreate(username, expirationDate);
+        console.log(user.first_name);
+        return res.json({
+            token: accessToken,
+            expiry: expirationDate,
+            firstName: user.first_name,
+            profile_picture: user.profile_picture,
+        });
     }
-    const expirationDate = Date.now() / 1000 + 60 * 60;
-    const accessToken = jwtCreate(username, expirationDate);
-    return res.json({
-        token: accessToken,
-        expiry: expirationDate,
-        firstName: user.firstName,
-        profilePic: user.profile_picture,
-    });
+    catch (error) {
+        console.log(error);
+        return res.status(400).send(error.message);
+    }
 }));
+// ? req.user.sub is the username stored in the request.
 router.post("/upload", upload.single("file"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log(req.user);
         const { file } = req;
-        const driveId = yield (0, googledrive_1.uploadFile)(file);
-        // const queryResult = await query("INSERT INTO ");
-        return res.status(200).send("Form Submitted");
+        const userQuery = yield (0, db_1.queryNoCall)("SELECT * FROM USERS WHERE username = $1", [
+            req.user.sub,
+        ]);
+        const user = userQuery.rows[0];
+        console.log(user);
+        if (user.profile_picture)
+            yield (0, googledrive_1.deleteFile)(user.profile_picture);
+        const driveId = yield (0, googledrive_1.uploadFile)(file, user.username);
+        yield (0, db_1.queryNoCall)("UPDATE USERS SET profile_picture = $1 WHERE username = $2", [
+            driveId,
+            user.username,
+        ]);
+        return res.status(200).send(driveId);
     }
     catch (error) {
-        // return res.status(500).send("Something went wrong");
         console.log(error);
+        return res.status(500).send("Something went wrong");
     }
 }));
 router.get("/pic/:fileId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { fileId } = req.params;
         const file = yield (0, googledrive_1.getFile)(fileId);
-        const stream = fs_1.default.createReadStream(file);
-        res.set("Content-Type", "image/jpeg");
-        stream.pipe(res);
+        console.log("File here in protected");
+        console.log(file);
+        console.log(file.headers["content-type"]);
+        console.log(file.headers["content-length"]);
+        res.setHeader("Content-Type", file.headers["content-type"]);
+        res.setHeader("Content-Length", file.headers["content-length"]);
+        file.data.pipe(res);
+        // const stream = fs.createReadStream(file);
+        // stream.pipe(res);
     }
     catch (error) {
-        res.status(500).send(error);
+        console.log(error);
+        res.status(500).send(error.message);
     }
 }));
 const jwtValidate = (req, res, next) => {
@@ -138,6 +156,7 @@ const jwtValidate = (req, res, next) => {
         jwt.verify(token, config_1.default.SECRET_KEY, (err, user) => __awaiter(void 0, void 0, void 0, function* () {
             if (err)
                 throw new Error("Invalid token");
+            console.log(user);
             req.user = user;
             return next();
         }));

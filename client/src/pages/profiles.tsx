@@ -1,3 +1,9 @@
+import FileUpload from "@/components/uploadFile";
+
 export default function Profile() {
-  return <div>Hello World</div>;
+  return (
+    <div>
+      <FileUpload />
+    </div>
+  );
 }
