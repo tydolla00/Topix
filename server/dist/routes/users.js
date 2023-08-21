@@ -16,6 +16,9 @@ const express_promise_router_1 = __importDefault(require("express-promise-router
 const db_1 = require("../db/db");
 const router = new express_promise_router_1.default();
 exports.default = router;
+router.get("/hello", (req, res) => {
+    res.send("Hello World Worked");
+});
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const queryResult = yield (0, db_1.queryNoCall)("SELECT * FROM USERS");
     const users = queryResult.rows;
