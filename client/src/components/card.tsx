@@ -6,22 +6,27 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shadcn/ui/card";
-import HarryPotter from "../assets/harry-potter.png";
 import { useNavigate } from "react-router-dom";
-export const QuizCard = () => {
+export const QuizCard = ({
+  title,
+  img,
+  description,
+}: {
+  title: string;
+  img: string;
+  description: string;
+}) => {
   return (
-    <div className="card w-5/12 bg-base-300 shadow-xl max-w-[175px] max-h-[377px]">
+    <div className="card w-5/12 bg-base-300 shadow-xl max-w-[175px] max-h-[377px] cursor-pointer hover:scale-105 transition">
       <figure>
-        <img alt="Harry Potter" src={HarryPotter} />
+        <img alt="Quiz Card Image" src={img} />
       </figure>
       <div className="card-body p-5">
         <h2 className="card-title text-md text-center">
-          Harry Potter Quiz
+          {title}
           {/* <div className="badge badge-secondary text-xs">NEW</div> */}
         </h2>
-        <p className="italic text-sm">
-          Test your knowledge on this very difficult Harry Potter quiz.
-        </p>
+        <p className="italic text-sm">{description}</p>
       </div>
     </div>
   );
@@ -30,10 +35,12 @@ export const QuizCard = () => {
 export const TopixCard = ({ title, description, url, img }: TopixCard) => {
   let navigate = useNavigate();
   return (
-    <Card className="w-64 h-72 relative hover:scale-105 transition">
+    <Card className="md:w-64 md:h-72 w-52 h-[270px] relative hover:scale-105 transition">
       <div className="flex flex-col h-full">
         <CardHeader>
-          <CardTitle>{title}</CardTitle>
+          <CardTitle className="text-lg md:text-2xl text-center">
+            {title}
+          </CardTitle>
           <img className="max-h-[50px] object-cover w-full" src={img} />
         </CardHeader>
         <CardContent>
