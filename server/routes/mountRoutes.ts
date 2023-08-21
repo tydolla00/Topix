@@ -6,6 +6,6 @@ import users from "./users";
 const mountRoutes = (app: Express) => {
   app.use("/games", games);
   app.use("/auth", protectedResources);
-  app.use("/api/users", users);
+  app.use("/users", users);
 };
 export default mountRoutes;
