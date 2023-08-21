@@ -39,7 +39,7 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 (0, mountRoutes_1.default)(app);
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
     res.send("Hello World");
 });
 // ! Uncomment code below to create db schema.
