@@ -30,6 +30,7 @@ const cors_1 = __importDefault(require("cors"));
 const dotenv = __importStar(require("dotenv"));
 const express_1 = __importDefault(require("express"));
 const mountRoutes_1 = __importDefault(require("./routes/mountRoutes"));
+// import { queryNoCall } from "./db/db";
 const config_1 = __importDefault(require("./config"));
 // elephantSQL for online hosting
 // https://neon.tech/pricing
@@ -39,6 +40,9 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 (0, mountRoutes_1.default)(app);
+app.get("/", (req, res) => {
+    res.send("Hello World");
+});
 // ! Uncomment code below to create db schema.
 /*
 const createTables = [
