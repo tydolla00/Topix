@@ -3,7 +3,7 @@ import { Express } from "express";
 import * as dotenv from "dotenv";
 import express from "express";
 import mountRoutes from "./routes/mountRoutes";
-// import { queryNoCall } from "./db/db";
+import { queryNoCall } from "./db/db";
 import config from "./config";
 
 // elephantSQL for online hosting
