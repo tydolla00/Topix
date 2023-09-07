@@ -15,7 +15,7 @@ export default function Login() {
   if (authData) navigate.push("/");
 
   const { state, fetchData } = useMyFetch<UserAuthData>({
-    url: "http://localhost:8000/auth/login",
+    url: "http://localhost:3000/api/login",
     method: "POST",
   });
   const { toast } = useToast();
@@ -24,12 +24,14 @@ export default function Login() {
   const onSubmit = async (data: any) => {
     try {
       console.log("hey");
-      // login(await fetchData(data));
-      // console.log(state.data);
-      signIn("credentials", {
-        ...data,
-        redirect: false,
-      });
+      const response = await fetchData(data);
+      console.log({ response });
+      login(response);
+      console.log(state.data);
+      // signIn("credentials", {
+      //   ...data,
+      //   redirect: false,
+      // });
       // ! call login function here ?
     } catch (error: any) {
       const errorMessage = state.error?.response?.data || error?.response?.data;
