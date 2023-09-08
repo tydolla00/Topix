@@ -1,16 +1,5 @@
 import NextAuth from "next-auth/next";
-import GoogleProvider from "next-auth/providers/google";
-import GithubProvider from "next-auth/providers/github";
-import config from "@/app/api/services/config";
-
-export const authOptions = {
-  providers: [
-    GoogleProvider({
-      clientId: config.GOOGLE_CLIENT_ID,
-      clientSecret: config.GOOGLE_CLIENT_SECRET,
-    }),
-  ],
-};
+import { authOptions } from "@/lib/utils";
 
 const handler = NextAuth(authOptions);
 
