@@ -48,6 +48,7 @@ export default function Quizzes() {
       <div className="mt-4 flex flex-wrap gap-10">
         {data.map((quizcard) => (
           <QuizCard
+            key={quizcard.title}
             title={quizcard.title}
             description={quizcard.description}
             img={quizcard.img}

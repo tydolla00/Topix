@@ -4,7 +4,7 @@ import EntryPoint from "./components/entryPoint";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Topix",
