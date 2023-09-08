@@ -30,8 +30,8 @@ export const Accordion = () => {
         </div>
         <div className="collapse-content text-center">
           <p>
-            Think you're a Harry Potter Wiz? Are you the ultimate RDC fan? Test
-            your knowledge here 👇
+            Think you&apos;re a Harry Potter Wiz? Are you the ultimate RDC fan?
+            Test your knowledge here 👇
           </p>
           <div
             onClick={() => navigate.push("/quizzes")}
@@ -46,8 +46,8 @@ export const Accordion = () => {
         <div className="collapse-title text-xl font-medium">Contact me!</div>
         <div className="collapse-content text-center">
           <p>
-            Let me know what you like, don't like, chat to me about React, give
-            me tips, alert me of bugs. Buzzzz 🐝
+            Let me know what you like, don&apos;t like, chat to me about React,
+            give me tips, alert me of bugs. Buzzzz 🐝
           </p>
           <div
             onClick={() => navigate.push("/contact")}

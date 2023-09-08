@@ -59,7 +59,7 @@ export default function Gaming() {
       </button>
       <div className="flex flex-wrap gap-2">
         {data.map((cardItem) => (
-          <div className="basis-1/3">
+          <div key={cardItem.title} className="basis-1/3">
             <TopixCard
               description={cardItem.description}
               title={cardItem.title}
