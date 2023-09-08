@@ -9,6 +9,8 @@ interface ENV {
   NEXTAUTH_SECRET: string | undefined;
   NEXTAUTH_URL: string | undefined;
   VERCEL_URL: string | undefined;
+  GOOGLE_CLIENT_ID: string | undefined;
+  GOOGLE_CLIENT_SECRET: string | undefined;
 }
 
 interface Config {
@@ -18,6 +20,8 @@ interface Config {
   NEXTAUTH_SECRET: string;
   NEXTAUTH_URL: string;
   VERCEL_URL: string;
+  GOOGLE_CLIENT_ID: string;
+  GOOGLE_CLIENT_SECRET: string;
 }
 
 const getConfig = (): ENV => {
@@ -28,6 +32,8 @@ const getConfig = (): ENV => {
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     VERCEL_URL: process.env.VERCEL_URL,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   };
 };
 
