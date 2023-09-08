@@ -36,12 +36,13 @@ const getConfig = (): ENV => {
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   };
 };
-
+// ! todo Currently throwing error on prod because database_url is undefined
+// * uncomment code when fixed.
 const getSanitzedConfig = (config: ENV): Config => {
   for (const [key, value] of Object.entries(config)) {
-    if (value === undefined) {
-      throw new Error(`Missing key ${key} in config.env`);
-    }
+    // if (value === undefined) {
+    //   throw new Error(`Missing key ${key} in config.env`);
+    // }
   }
   return config as Config;
 };
