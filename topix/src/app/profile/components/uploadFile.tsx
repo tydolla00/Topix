@@ -9,6 +9,7 @@ import {
 import { ToastAction } from "@/shadcn/ui/toast";
 import { Toaster } from "@/shadcn/ui/toaster";
 import { useToast } from "@/shadcn/ui/use-toast";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function FileUpload() {
@@ -85,7 +86,7 @@ export default function FileUpload() {
           Submit
         </button>
       </form>
-      {file && <img src={file} alt="Uploaded file" />}
+      {file && <Image src={file} alt="Uploaded file" />}
     </>
   );
 }

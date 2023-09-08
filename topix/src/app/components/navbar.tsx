@@ -157,7 +157,7 @@ export default function Navbar() {
                     <Link href="/admin">Admin Dashboard</Link>
                   </li>
                   <li>
-                    <div onClick={() => logout(() => router.push("/home"))}>
+                    <div onClick={() => logout(() => router.push("/"))}>
                       Log out
                     </div>
                   </li>

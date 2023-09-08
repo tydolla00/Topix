@@ -7,15 +7,17 @@ import { useForm } from "react-hook-form";
 import { useMyFetch } from "@/app/hooks/useFetch";
 import { useToast } from "@/shadcn/ui/use-toast";
 import { Toaster } from "@/shadcn/ui/toaster";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 
 export default function Login() {
   const { authData, login } = useAuth();
   const navigate = useRouter();
   if (authData) navigate.push("/");
 
+  const callbackUrl = "http://localhost:3000";
+
   const { state, fetchData } = useMyFetch<UserAuthData>({
-    url: "http://localhost:8000/auth/login",
+    url: "http://localhost:3000/api/login",
     method: "POST",
   });
   const { toast } = useToast();
@@ -24,12 +26,14 @@ export default function Login() {
   const onSubmit = async (data: any) => {
     try {
       console.log("hey");
-      // login(await fetchData(data));
-      // console.log(state.data);
-      signIn("credentials", {
-        ...data,
-        redirect: false,
-      });
+      const response = await fetchData(data);
+      console.log({ response });
+      login(response);
+      console.log(state.data);
+      // signIn("credentials", {
+      //   ...data,
+      //   redirect: false,
+      // });
       // ! call login function here ?
     } catch (error: any) {
       const errorMessage = state.error?.response?.data || error?.response?.data;
@@ -49,6 +53,12 @@ export default function Login() {
             Sign in to your account
           </h2>
           <form onSubmit={handleSubmit(onSubmit)}>
+            <button
+              onClick={() => signIn("google", { callbackUrl: callbackUrl })}
+              className="btn btn-ghost btn-outline btn-primary"
+            >
+              Sign in with Google
+            </button>
             <div className="flex flex-col my-5 items-center">
               <InputForm
                 name="username"
