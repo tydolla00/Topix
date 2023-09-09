@@ -1,45 +1,46 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import { UserAuthData, useAuth } from "../hooks/useAuth";
 import { InputForm } from "../components/input";
 import { useForm } from "react-hook-form";
-import { useMyFetch } from "@/app/hooks/useFetch";
 import { useToast } from "@/shadcn/ui/use-toast";
 import { Toaster } from "@/shadcn/ui/toaster";
 import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const { data: session } = useSession();
-  if (session) redirect("/home");
-  const { authData, login } = useAuth();
+  const router = useRouter();
+  if (session) redirect("/");
 
   const callbackUrl = "http://localhost:3000";
 
-  const { state, fetchData } = useMyFetch<UserAuthData>({
-    url: "http://localhost:3000/api/login",
-    method: "POST",
-  });
   const { toast } = useToast();
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data: any) => {
     try {
       console.log("hey");
-      const response = await fetchData(data);
-      console.log({ response });
-      login(response);
-      console.log(state.data);
-      // signIn("credentials", {
-      //   ...data,
-      //   redirect: false,
-      // });
+      const status = await signIn("credentials", {
+        // ...data,
+        email: data.email,
+        password: data.password,
+        redirect: false,
+        callbackUrl: "/",
+      });
+      if (status?.ok) router.push(status.url as string);
+      if (status?.error)
+        toast({
+          variant: "destructive",
+          description: status.error || "Unexpected error",
+        });
+      console.log(status);
       // ! call login function here ?
     } catch (error: any) {
-      const errorMessage = state.error?.response?.data || error?.response?.data;
+      console.log(error);
       toast({
         variant: "destructive",
-        description: (errorMessage as any) || "Unexpected error",
+        description: error.response.data || "Unexpected error",
       });
     }
   };
@@ -85,7 +86,6 @@ export default function Login() {
             <button
               type="submit"
               className="btn btn-outline btn-primary w-full"
-              disabled={state.isLoading}
             >
               Submit
             </button>
