@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import * as bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken";
 import config from "@/app/api/services/config";
 

@@ -11,7 +11,7 @@ import { useMyFetch } from "@/app/hooks/useFetch";
 export default function Register() {
   const { toast } = useToast();
   const { state, fetchData } = useMyFetch({
-    url: "http://localhost:3000/api/register",
+    url: "http://localhost:3000/api/auth/register",
     method: "POST",
   });
 
