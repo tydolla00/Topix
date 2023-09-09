@@ -1,28 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { useEffect } from "react";
 // import DarkModeSwitcher from "./darkmodeswitcher";
-import { useAuth } from "../hooks/useAuth";
 import ProfilePicture from "./profilePicture";
 import { Toaster } from "@/shadcn/ui/toaster";
 import { useToast } from "@/shadcn/ui/use-toast";
 import { ToastAction } from "@radix-ui/react-toast";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
   const { toast } = useToast();
-  const router = useRouter();
 
   const pathname = usePathname();
 
-  const { authData, logout } = useAuth();
+  const { data: session } = useSession();
+
   useEffect(() => {
     console.log({ pathname });
     console.log(Date.now());
-    if (authData && Number(authData.expiry) * 1000 <= new Date().getTime()) {
-      logout();
+    if (session && Number(session.expires) * 1000 <= new Date().getTime()) {
+      signOut();
       toast({
         title: "You have been logged out",
         variant: "destructive",
@@ -70,7 +70,7 @@ export default function Navbar() {
           </ul>
         </div>
         <div className="navbar-end">
-          {!authData && (
+          {!session?.user && (
             <>
               <Link href="/login">
                 <button className="btn hidden md:block">Login</button>
@@ -105,11 +105,11 @@ export default function Navbar() {
             </svg>
           </button>
           <div className="dropdown dropdown-end">
-            {authData ? (
+            {session?.user ? (
               <div tabIndex={0} className="avatar online btn btn-circle">
                 <div className="rounded-full w-10">
-                  {authData.profile_picture ? (
-                    <ProfilePicture />
+                  {session.user.image ? (
+                    <ProfilePicture img={session.user.image} />
                   ) : (
                     //TODO Handle null profile pic here, skeleton.
                     <p>T</p>
@@ -148,7 +148,7 @@ export default function Navbar() {
               tabIndex={0}
               className="shadow menu dropdown-content z-[1] bg-base-100 rounded-box p-2"
             >
-              {authData ? (
+              {session?.user ? (
                 <>
                   <li>
                     <Link href="/profile">My Profile</Link>
@@ -157,9 +157,7 @@ export default function Navbar() {
                     <Link href="/admin">Admin Dashboard</Link>
                   </li>
                   <li>
-                    <div onClick={() => logout(() => router.push("/"))}>
-                      Log out
-                    </div>
+                    <div onClick={() => signOut()}>Log out</div>
                   </li>
                 </>
               ) : (

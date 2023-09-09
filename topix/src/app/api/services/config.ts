@@ -11,6 +11,8 @@ interface ENV {
   VERCEL_URL: string | undefined;
   GOOGLE_CLIENT_ID: string | undefined;
   GOOGLE_CLIENT_SECRET: string | undefined;
+  GITHUB_CLIENT_ID: string | undefined;
+  GITHUB_CLIENT_SECRET: string | undefined;
 }
 
 interface Config {
@@ -22,6 +24,8 @@ interface Config {
   VERCEL_URL: string;
   GOOGLE_CLIENT_ID: string;
   GOOGLE_CLIENT_SECRET: string;
+  GITHUB_CLIENT_ID: string;
+  GITHUB_CLIENT_SECRET: string;
 }
 
 const getConfig = (): ENV => {
@@ -34,6 +38,8 @@ const getConfig = (): ENV => {
     VERCEL_URL: process.env.VERCEL_URL,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
   };
 };
 // ! todo Currently throwing error on prod because database_url is undefined
