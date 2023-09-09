@@ -95,6 +95,7 @@ export default function Home() {
         <>
           <h2>{session.user?.email}</h2>
           <h2>{session.user?.name}</h2>
+          <h2>{session.expires}</h2>
         </>
       )}
       <p className="capitalize text-2xl p-3">User Submitted Topix</p>

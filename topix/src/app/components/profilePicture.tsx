@@ -5,7 +5,7 @@ import { getFromLocalStorage } from "../hooks/useLocalStorage";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export default function ProfilePicture() {
+export default function ProfilePicture({ img }: { img: string }) {
   const storedAuthData = getFromLocalStorage<UserAuthData>("user");
 
   const [image, setImage] = useState("");
@@ -39,5 +39,5 @@ export default function ProfilePicture() {
     return () => {};
   }, [storedAuthData?.profile_picture]);
 
-  return <img src={image} alt="Profile Pic" />;
+  return <img src={img} alt="Profile Pic" />;
 }

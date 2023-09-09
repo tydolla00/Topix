@@ -1,18 +1,18 @@
 "use client";
 
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { UserAuthData, useAuth } from "../hooks/useAuth";
 import { InputForm } from "../components/input";
 import { useForm } from "react-hook-form";
 import { useMyFetch } from "@/app/hooks/useFetch";
 import { useToast } from "@/shadcn/ui/use-toast";
 import { Toaster } from "@/shadcn/ui/toaster";
-import { signIn, signOut } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 export default function Login() {
+  const { data: session } = useSession();
+  if (session) redirect("/home");
   const { authData, login } = useAuth();
-  const navigate = useRouter();
-  if (authData) navigate.push("/");
 
   const callbackUrl = "http://localhost:3000";
 
@@ -58,6 +58,12 @@ export default function Login() {
               className="btn btn-ghost btn-outline btn-primary"
             >
               Sign in with Google
+            </button>
+            <button
+              onClick={() => signIn("github", { callbackUrl: callbackUrl })}
+              className="btn btn-ghost btn-outline btn-primary"
+            >
+              Sign in with Github
             </button>
             <div className="flex flex-col my-5 items-center">
               <InputForm
