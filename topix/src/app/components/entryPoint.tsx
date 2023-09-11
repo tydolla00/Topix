@@ -14,7 +14,7 @@ export default function EntryPoint({
   let authData = getFromLocalStorage<UserAuthData>("user");
   return (
     <SessionProvider session={session}>
-      <AuthProvider storedAuthData={authData}>{children}</AuthProvider>;
+      <AuthProvider storedAuthData={authData}>{children}</AuthProvider>
     </SessionProvider>
   );
 }

@@ -5,8 +5,12 @@ import Math from "@/app/assets/math.jpeg";
 import RDC from "@/app/assets/rdcworld.png";
 import NBA from "@/app/assets/nba.webp";
 import VideoGame from "@/app/assets/videogame.png";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
 
-export default function Quizzes() {
+export default async function Quizzes() {
+  const session = await getServerSession(authOptions);
+
   const data = [
     {
       description: "Test your knowledge on this magical quiz.",
@@ -39,6 +43,13 @@ export default function Quizzes() {
   ];
   return (
     <div className="max-w-[80vw] my-0 mx-auto">
+      {session && (
+        <>
+          <h2>{session.user?.email}</h2>
+          <h2>{session.user?.name}</h2>
+          <h2>{session.expires}</h2>
+        </>
+      )}
       <div className="text-2xl uppercase mx-2 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 from-10% to-70% to-rose-500 my-4">
         Test your knowledge on user submitted quizzes
       </div>
