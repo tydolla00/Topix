@@ -1,12 +1,13 @@
-"use client";
 // ! import Slider from "../components/slider";
 import { Stack } from "./components/stack";
 import { Carousel } from "./components/carousel";
 import { Accordion } from "./components/accordion";
-import { useSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
-export default function Home() {
-  const { data: session } = useSession();
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+  console.log({ session });
   const userSubmittedData: Stack = [
     {
       text: "Best Harry Potter Films",

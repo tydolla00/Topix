@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 export default function Login() {
   const { data: session } = useSession();
   const router = useRouter();
-  if (session) redirect("/");
 
   const callbackUrl = "http://localhost:3000";
 
@@ -19,32 +18,23 @@ export default function Login() {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data: any) => {
-    try {
-      console.log("hey");
-      const status = await signIn("credentials", {
-        // ...data,
-        email: data.email,
-        password: data.password,
-        redirect: false,
-        callbackUrl: "/",
-      });
-      if (status?.ok) router.push(status.url as string);
-      if (status?.error)
-        toast({
-          variant: "destructive",
-          description: status.error || "Unexpected error",
-        });
-      console.log(status);
-      // ! call login function here ?
-    } catch (error: any) {
-      console.log(error);
+    const status = await signIn("credentials", {
+      email: data.username,
+      password: data.password,
+      redirect: false, // Stops redirect to error page.
+      callbackUrl: "/",
+    });
+    console.log(status);
+    if (status?.error) {
       toast({
         variant: "destructive",
-        description: error.response.data || "Unexpected error",
+        description: status?.error || "Unexpected error",
       });
+      return;
     }
+    router.push("/");
+    // ! call login function here ?
   };
-
   return (
     <>
       <div className="max-w-[80vw] my-0 mx-auto flex justify-center items-center h-screen">
@@ -53,19 +43,19 @@ export default function Login() {
           <h2 className="font-bold text-xl text-center p-8">
             Sign in to your account
           </h2>
+          <button
+            onClick={() => signIn("google", { callbackUrl: callbackUrl })}
+            className="btn btn-ghost btn-outline btn-primary"
+          >
+            Sign in with Google
+          </button>
+          <button
+            onClick={() => signIn("github", { callbackUrl: callbackUrl })}
+            className="btn btn-ghost btn-outline btn-primary"
+          >
+            Sign in with Github
+          </button>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <button
-              onClick={() => signIn("google", { callbackUrl: callbackUrl })}
-              className="btn btn-ghost btn-outline btn-primary"
-            >
-              Sign in with Google
-            </button>
-            <button
-              onClick={() => signIn("github", { callbackUrl: callbackUrl })}
-              className="btn btn-ghost btn-outline btn-primary"
-            >
-              Sign in with Github
-            </button>
             <div className="flex flex-col my-5 items-center">
               <InputForm
                 name="username"

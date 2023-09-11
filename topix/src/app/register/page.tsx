@@ -39,6 +39,7 @@ export default function Register() {
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(validationSchema) });
+
   const data: {
     name: string;
     type: "text" | "password";
@@ -80,6 +81,7 @@ export default function Register() {
       placeholder: "*****",
     },
   ];
+
   const onSubmit = async (data: any) => {
     console.log(data);
     const firstName = data.firstName.replaceAll(" ", "").toLowerCase();
@@ -87,10 +89,12 @@ export default function Register() {
     const username = data.username.replaceAll(" ", "").toLowerCase();
     const password = data.password;
     const email = data.email.toLowerCase();
+
     try {
       await fetchData({ firstName, lastName, username, password, email });
       toast({ description: "Successfully signed up" });
     } catch (error: any) {
+      console.log(error);
       toast({ variant: "destructive", description: error.response.data });
     }
   };
@@ -159,7 +163,6 @@ export default function Register() {
               Submit
             </button>
           </form>
-          E
         </div>
       </div>
     </>
