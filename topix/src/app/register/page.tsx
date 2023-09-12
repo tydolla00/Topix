@@ -7,11 +7,12 @@ import * as Yup from "yup";
 import { useToast } from "@/shadcn/ui/use-toast";
 import { Toaster } from "@/shadcn/ui/toaster";
 import { useMyFetch } from "@/app/hooks/useFetch";
+import { domain } from "@/lib/utils";
 
 export default function Register() {
   const { toast } = useToast();
   const { state, fetchData } = useMyFetch({
-    url: "http://localhost:3000/api/auth/register",
+    url: `${domain}/api/auth/register`,
     method: "POST",
   });
 
