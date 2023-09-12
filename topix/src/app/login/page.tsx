@@ -20,7 +20,7 @@ export default function Login() {
 
   const onSubmit = async (data: any) => {
     const status = await signIn("credentials", {
-      email: data.username,
+      email: data.username.toLowerCase(),
       password: data.password,
       redirect: false, // Stops redirect to error page.
       callbackUrl: "/",
