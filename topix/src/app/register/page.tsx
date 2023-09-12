@@ -19,11 +19,25 @@ export default function Register() {
   // * const [isLoading, setIsLoading] = useState(false);
 
   const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required(),
+    firstName: Yup.string()
+      .required("First name is required")
+      .matches(
+        /^[a-zA-Z0-9]+$/,
+        "Username can only contain letters and numbers"
+      ),
+    lastName: Yup.string()
+      .required()
+      .matches(
+        /^[a-zA-Z0-9]+$/,
+        "Username can only contain letters and numbers"
+      ),
     username: Yup.string()
       .required("Username is required ")
       .min(6, "Username must be at least 6 characters")
+      .matches(
+        /^[a-zA-Z0-9]+$/,
+        "Username can only contain letters and numbers"
+      )
       .max(26, "Username must not be more than 26 characters"),
     email: Yup.string().required("Email is required").email("Email is invalid"),
     password: Yup.string()
@@ -86,12 +100,13 @@ export default function Register() {
     console.log(data);
     const firstName = data.firstName.replaceAll(" ", "").toLowerCase();
     const lastName = data.lastName.replaceAll(" ", "").toLowerCase();
+    const name = `${firstName} ${lastName}`;
     const username = data.username.replaceAll(" ", "").toLowerCase();
     const password = data.password;
     const email = data.email.toLowerCase();
 
     try {
-      await fetchData({ firstName, lastName, username, password, email });
+      await fetchData({ firstName, lastName, username, password, email, name });
       toast({ description: "Successfully signed up" });
     } catch (error: any) {
       console.log(error);
