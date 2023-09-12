@@ -7,12 +7,13 @@ import { useToast } from "@/shadcn/ui/use-toast";
 import { Toaster } from "@/shadcn/ui/toaster";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { domain } from "@/lib/utils";
 
 export default function Login() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const callbackUrl = "http://localhost:3000";
+  const callbackUrl = domain;
 
   const { toast } = useToast();
   const { register, handleSubmit } = useForm();
