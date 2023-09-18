@@ -1,43 +1,13 @@
-"use client";
-
-import { UserAuthData } from "../hooks/useAuth";
-import { getFromLocalStorage } from "../hooks/useLocalStorage";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import Image from "next/image";
 
 export default function ProfilePicture({ img }: { img: string }) {
-  const storedAuthData = getFromLocalStorage<UserAuthData>("user");
-
-  const [image, setImage] = useState("");
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${storedAuthData?.token}`,
-      responseType: "arraybuffer",
-    },
-  };
-
-  useEffect(() => {
-    if (storedAuthData?.profile_picture) {
-      axios
-        .get(
-          `http://localhost:8000/auth/pic/${storedAuthData.profile_picture}`,
-          config
-        )
-        .then((response) => {
-          console.log(response.data);
-          const blob = new Blob([response.data], {
-            type: response.headers["content-type"],
-          });
-          const src = URL.createObjectURL(blob);
-          setImage(src);
-        })
-        .catch((err) => {
-          console.error("Error catching image", err);
-        });
-    }
-    return () => {};
-  }, [storedAuthData?.profile_picture]);
-
-  return <img src={img} alt="Profile Pic" />;
+  return (
+    <Image
+      onError={(e) => console.error(e.target)}
+      width={200}
+      height={200}
+      src={img}
+      alt="Profile Pic"
+    />
+  );
 }

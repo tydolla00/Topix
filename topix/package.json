@@ -2,6 +2,9 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev",
     "db": "npx prisma db push && npx prisma generate",
@@ -17,9 +20,9 @@
     "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.4",
-    "@types/node": "20.5.2",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
+    "@uploadthing/react": "^5.6.0",
     "autoprefixer": "10.4.15",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.1",
@@ -29,6 +32,7 @@
     "dotenv": "^16.3.1",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.19",
+    "googleapis": "^126.0.1",
     "jsonwebtoken": "^9.0.1",
     "lucide-react": "^0.269.0",
     "next": "13.4.19",
@@ -41,13 +45,16 @@
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.6",
     "typescript": "5.1.6",
+    "uploadthing": "^5.6.0",
     "yup": "^1.2.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/bcryptjs": "^2.4.3",
     "@types/jsonwebtoken": "^9.0.2",
+    "@types/node": "^20.6.2",
     "daisyui": "^3.6.3",
-    "prisma": "^5.2.0"
+    "prisma": "^5.3.1",
+    "ts-node": "^10.9.1"
   }
 }

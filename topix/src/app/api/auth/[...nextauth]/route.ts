@@ -4,11 +4,10 @@ import config from "@/app/api/services/config";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaClient, Provider } from "@prisma/client";
+import { Provider } from "@prisma/client";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/utils";
 
 // Using credetials callback order is
 // authorize -> signIn -> jwt -> session
@@ -42,9 +41,12 @@ export const authOptions = {
       if (session.user?.name) session.user.name = token.name;
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, trigger, user }) {
       // * User only available on first run.
-      console.log("In JWT", token, token);
+      console.log("In JWT", user, token);
+      if (trigger === "update") {
+        console.log("Update", token, trigger, user);
+      }
       let newUser = { ...user } as any;
       if (newUser.first_name && newUser.last_name)
         token.name = `${newUser.first_name} ${newUser.last_name}`;
