@@ -18,9 +18,6 @@ export default function FileUpload() {
   return (
     <>
       <Toaster />
-      <label className="label" htmlFor="file">
-        File
-      </label>
       <UploadButton<OurFileRouter>
         endpoint="imageUploader"
         onClientUploadComplete={async (res) => {

@@ -52,7 +52,6 @@ model schema {
   games  games[]
   movies movies[]
   tv     tv[]
-  users  users[]
 }
 
 model topix {
@@ -70,19 +69,6 @@ model tv {
   channel  String   @db.VarChar(100)
   timeline DateTime @db.Date
   schema   schema?  @relation(fields: [tv_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tv")
-}
-
-model users {
-  id              Int     @id @default(autoincrement())
-  users_id        Int?
-  username        String? @unique @db.VarChar(50)
-  email           String? @unique @db.VarChar(50)
-  password        String? @db.VarChar(60)
-  first_name      String? @db.VarChar(30)
-  last_name       String? @db.VarChar(30)
-  profile_picture String? @db.VarChar(100)
-  provider        Provider
-  schema          schema? @relation(fields: [users_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users")
 }
 
 model account {
@@ -115,10 +101,10 @@ model session {
 model user {
   id            String    @id @default(cuid())
   username      String?   @unique @db.VarChar(50)
-  first_name    String?   @db.VarChar(30)
-  last_name     String?   @db.VarChar(30)
-  name          String?
-  email         String?   @unique
+  first_name    String   
+  last_name     String   
+  name          String
+  email         String   @unique
   password      String?
   emailVerified DateTime?
   image         String?

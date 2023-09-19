@@ -3,10 +3,9 @@ import Link from "next/link";
 // import DarkModeSwitcher from "./darkmodeswitcher";
 import ProfilePicture from "./profilePicture";
 import { signOut, useSession } from "next-auth/react";
-import { getServerSession } from "next-auth";
 
 export default function Navbar() {
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
   return (
     <div>
       <nav className="navbar bg-base-100">
