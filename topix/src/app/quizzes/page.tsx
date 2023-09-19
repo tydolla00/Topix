@@ -1,55 +1,36 @@
 import { QuizCard } from "../components/card";
-import HarryPotter from "@/app/assets/harry-potter.webp";
-import Madden from "@/app/assets/madden24.webp";
-import Math from "@/app/assets/math.jpeg";
-import RDC from "@/app/assets/rdcworld.png";
-import NBA from "@/app/assets/nba.webp";
-import VideoGame from "@/app/assets/videogame.png";
-import { authOptions } from "../api/auth/[...nextauth]/route";
-import { getServerSession } from "next-auth";
+import Harry_Potter from "@/app/assets/harry-potter.webp";
+import _Madden from "@/app/assets/madden24.webp";
+import _Math from "@/app/assets/math.jpeg";
+import _RDC from "@/app/assets/rdcworld.png";
+import _NBA from "@/app/assets/nba.webp";
+import Video_Game from "@/app/assets/videogame.png";
+import { StaticImageData } from "next/image";
+import { quizzes } from "@prisma/client";
+import { prisma } from "@/lib/utils";
+
+const fetchQuizzes = async () => {
+  const quizzes = await prisma.quizzes.findMany();
+  return quizzes;
+};
 
 export default async function Quizzes() {
-  const session = await getServerSession(authOptions);
+  // const data = await fetch("http://localhost:3000/api/quizzes");
+  // const response: quizzes[] = await data.json();
+  const quizzes = await fetchQuizzes();
 
-  const data = [
-    {
-      description: "Test your knowledge on this magical quiz.",
-      title: "Harry Potter Quiz",
-      img: HarryPotter,
-    },
-    {
-      description: "How well do you know football?",
-      title: "Football Quiz",
-      img: Madden,
-    },
-    {
-      description:
-        "Challege your friends and have fun with this Math Quiz, updated every week!",
-      title: "Math Quiz",
-      img: Math,
-    },
-    {
-      description: "How well do you know basketball?",
-      title: "Basketball Quiz",
-      img: NBA,
-    },
-    { description: "Do you think you know RDC?", title: "RDC Quiz", img: RDC },
-    {
-      description:
-        "Can you correctly guess all of these nostalgic theme songs?",
-      title: "Guess the Video Game Theme Songs",
-      img: VideoGame,
-    },
-  ];
+  const map = {
+    HarryPotter: Harry_Potter,
+    Madden: _Madden,
+    Math: _Math,
+    RDC: _RDC,
+    NBA: _NBA,
+    VideoGame: Video_Game,
+  };
+  const maps = new Map(Object.entries(map));
+
   return (
     <div className="max-w-[80vw] my-0 mx-auto">
-      {session && (
-        <>
-          <h2>{session.user?.email}</h2>
-          <h2>{session.user?.name}</h2>
-          <h2>{session.expires}</h2>
-        </>
-      )}
       <div className="text-2xl uppercase mx-2 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 from-10% to-70% to-rose-500 my-4">
         Test your knowledge on user submitted quizzes
       </div>
@@ -57,12 +38,13 @@ export default async function Quizzes() {
         Add Quiz +
       </button>
       <div className="mt-4 flex flex-wrap gap-10">
-        {data.map((quizcard) => (
+        {quizzes.map((quizcard) => (
           <QuizCard
-            key={quizcard.title}
-            title={quizcard.title}
+            key={quizcard.name}
+            title={quizcard.name}
             description={quizcard.description}
-            img={quizcard.img}
+            img={maps.get(quizcard.path as string) as StaticImageData}
+            url={quizcard.url}
           />
         ))}
       </div>

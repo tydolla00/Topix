@@ -1,39 +1,13 @@
 "use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-import { useEffect } from "react";
 // import DarkModeSwitcher from "./darkmodeswitcher";
 import ProfilePicture from "./profilePicture";
-import { Toaster } from "@/shadcn/ui/toaster";
-import { useToast } from "@/shadcn/ui/use-toast";
-import { ToastAction } from "@radix-ui/react-toast";
 import { signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
-  const { toast } = useToast();
-
-  const pathname = usePathname();
-
   const { data: session } = useSession();
-
-  useEffect(() => {
-    console.log({ pathname });
-    console.log(Date.now());
-    if (session && Number(session.expires) * 1000 <= new Date().getTime()) {
-      signOut();
-      toast({
-        title: "You have been logged out",
-        variant: "destructive",
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      });
-    }
-  }, [pathname]);
-
   return (
     <div>
-      <Toaster />
       <nav className="navbar bg-base-100">
         <div className="navbar-start text-sm sm:text-2xl font-extrabold normal-case flex-auto">
           <span className="bg-gradient-to-r from-base-content to-70% to-primary text-transparent bg-clip-text">
@@ -108,12 +82,13 @@ export default function Navbar() {
             {session?.user ? (
               <div tabIndex={0} className="avatar online btn btn-circle">
                 <div className="rounded-full w-10">
-                  {session.user.image ? (
+                  <ProfilePicture img={session.user.image as string} />
+                  {/* {session.user.image ? (
                     <ProfilePicture img={session.user.image} />
                   ) : (
                     //TODO Handle null profile pic here, skeleton.
                     <p>T</p>
-                  )}
+                  )} */}
                 </div>
               </div>
             ) : (
