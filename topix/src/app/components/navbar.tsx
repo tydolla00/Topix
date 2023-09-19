@@ -82,7 +82,7 @@ export default function Navbar() {
             {session?.user ? (
               <div tabIndex={0} className="avatar online btn btn-circle">
                 <div className="rounded-full w-10">
-                  <ProfilePicture img={session.user.image as string} />
+                  {/* <ProfilePicture img={session.user.image as string} /> */}
                   {/* {session.user.image ? (
                     <ProfilePicture img={session.user.image} />
                   ) : (
