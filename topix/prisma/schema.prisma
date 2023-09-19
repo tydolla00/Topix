@@ -101,8 +101,8 @@ model session {
 model user {
   id            String    @id @default(cuid())
   username      String?   @unique @db.VarChar(50)
-  first_name    String   
-  last_name     String   
+  first_name    String?   
+  last_name     String?   
   name          String
   email         String   @unique
   password      String?
