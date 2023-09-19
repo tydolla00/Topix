@@ -2,11 +2,8 @@
 import { Stack } from "./components/stack";
 import { Carousel } from "./components/carousel";
 import { Accordion } from "./components/accordion";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 
 export default async function Home() {
-  const session = await getServerSession(authOptions);
   const userSubmittedData: Stack = [
     {
       text: "Best Harry Potter Films",
@@ -76,28 +73,10 @@ export default async function Home() {
     },
   ];
 
-  // useEffect(() => {
-  //   return () => {
-  //     const arr = document.getElementsByClassName("fly");
-  //     let i = 0;
-  //     while (i < arr.length) {
-  //       arr[i].classList.remove("fly");
-  //       i++;
-  //     }
-  //   };
-  // }, []);
-
   return (
     <div className="sm:max-w-[80vw] my-0 mx-auto">
       {/* <Slider /> */}
       <Carousel />
-      {session && (
-        <>
-          <h2>{session.user?.email}</h2>
-          <h2>{session.user?.name}</h2>
-          <h2>{session.expires}</h2>
-        </>
-      )}
       <p className="capitalize text-2xl p-3">User Submitted Topix</p>
       <div className="flex sm:flex-row flex-col gap-10 justify-between p-2">
         <Stack data={userSubmittedData.slice(0, 3)} />

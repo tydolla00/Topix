@@ -83,12 +83,11 @@ export default function Navbar() {
               <div tabIndex={0} className="avatar online btn btn-circle">
                 <div className="rounded-full w-10">
                   {/* <ProfilePicture img={session.user.image as string} /> */}
-                  {/* {session.user.image ? (
+                  {session.user.image ? (
                     <ProfilePicture img={session.user.image} />
                   ) : (
-                    //TODO Handle null profile pic here, skeleton.
-                    <p>T</p>
-                  )} */}
+                    <p>P</p>
+                  )}
                 </div>
               </div>
             ) : (
