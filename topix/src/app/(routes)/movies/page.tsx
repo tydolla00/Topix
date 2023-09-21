@@ -1,11 +1,10 @@
-// * Associated with old Movies function.
 // import { useState } from "react";
 // import axios, { AxiosError } from "axios";
 // import { useAuth } from "../hooks/useAuth";
 // import { FileInput } from "@/components/input";
 import { TopixCard } from "@/app/components/card";
 import { ShuffleIcon } from "lucide-react";
-import Nickelodeon from "../assets/nickelodeon.png";
+import Nickelodeon from "@/app/assets/nickelodeon.png";
 import Disney from "@/app/assets/disney.png";
 import Marvel from "@/app/assets/marvel.webp";
 import Movie from "@/app/assets/movie.png";

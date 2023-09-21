@@ -1,6 +1,6 @@
 "use client";
 
-import { ValidatedFormInput } from "../components/input";
+import { ValidatedFormInput } from "@/app/components/input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -8,8 +8,13 @@ import { useToast } from "@/shadcn/ui/use-toast";
 import { Toaster } from "@/shadcn/ui/toaster";
 import { useMyFetch } from "@/app/hooks/useFetch";
 import { domain } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function Register() {
+  const session = useSession();
+  if (session) redirect("/");
+
   const { toast } = useToast();
   const { state, fetchData } = useMyFetch({
     url: `${domain}/api/auth/register`,

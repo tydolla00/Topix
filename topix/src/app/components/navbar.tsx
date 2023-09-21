@@ -3,6 +3,7 @@ import Link from "next/link";
 // import DarkModeSwitcher from "./darkmodeswitcher";
 import ProfilePicture from "./profilePicture";
 import { signOut, useSession } from "next-auth/react";
+import Modal from "./modal";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -60,7 +61,7 @@ export default function Navbar() {
             className="lg:mx-6 sm:mx-3 sm:block hidden "
             onClick={() => {
               let modal: any = window;
-              modal.search_modal.showModal();
+              modal.search.showModal();
             }}
           >
             <svg
@@ -182,29 +183,23 @@ export default function Navbar() {
               </li> */}
             </ul>
           </div>
-          <Modal />
+          <Modal
+            id="search"
+            key={"search"}
+            className="modal-bottom sm:modal-middle"
+          >
+            <div className="modal-box">
+              <h3 className="font-bold text-lg">Type something</h3>
+              <p className="py-4">Or press esc to exit</p>
+              <form method="dialog">
+                <div className="modal-action">
+                  <button className="btn">Close</button>
+                </div>
+              </form>
+            </div>
+          </Modal>
         </div>
       </nav>
     </div>
   );
 }
-
-const Modal = () => {
-  return (
-    <dialog id="search_modal" className="modal modal-bottom sm:modal-middle">
-      <form className="modal-box" method="dialog">
-        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-          ✕
-        </button>
-        <h3 className="font-bold text-lg">Type something</h3>
-        <p className="py-4">Or press esc to exit</p>
-        <div className="modal-action">
-          <button className="btn">Close</button>
-        </div>
-      </form>
-      <form method="dialog" className="modal-backdrop">
-        <button>close</button>
-      </form>
-    </dialog>
-  );
-};
