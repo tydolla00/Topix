@@ -58,6 +58,7 @@ export const FileInput = React.forwardRef<
     {...props}
   />
 ));
+FileInput.displayName = "FileInput";
 export interface RegisterProps extends InputFormProps {
   name: string;
   type: "password" | "text";
