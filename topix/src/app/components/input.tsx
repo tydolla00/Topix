@@ -1,3 +1,5 @@
+import * as React from "react";
+
 export const InputForm = ({
   label,
   name,
@@ -45,17 +47,18 @@ export const ValidatedFormInput = ({
   );
 };
 
-export const FileInput = ({ ...props }) => {
-  return (
-    <input
-      accept="image/png, image/gif, image/jpeg"
-      name="file"
-      type="file"
-      className="file-input w-full max-w-xs"
-      {...props}
-    />
-  );
-};
+export const FileInput = React.forwardRef<
+  HTMLInputElement,
+  React.HTMLAttributes<HTMLInputElement>
+>(({ ...props }) => (
+  <input
+    name="file"
+    type="file"
+    className="file-input w-full max-w-xs"
+    {...props}
+  />
+));
+FileInput.displayName = "FileInput";
 export interface RegisterProps extends InputFormProps {
   name: string;
   type: "password" | "text";

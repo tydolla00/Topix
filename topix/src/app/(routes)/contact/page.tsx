@@ -1,5 +1,5 @@
 "use client";
-import { ValidatedFormInput } from "../components/input";
+import { ValidatedFormInput } from "../../components/input";
 import Ty from "@/app/assets/ty.png";
 import { useMyFetch } from "@/app/hooks/useFetch";
 import * as Yup from "yup";

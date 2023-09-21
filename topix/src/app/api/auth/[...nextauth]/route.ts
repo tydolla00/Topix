@@ -8,6 +8,7 @@ import { Provider } from "@prisma/client";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/utils";
+import { updateUser } from "@/lib/functions";
 
 // Using credetials callback order is
 // authorize -> signIn -> jwt -> session
@@ -20,19 +21,11 @@ export const authOptions = {
       console.log("Preparams", { params });
       //   User signed in with a provider
       if (params.account?.provider != "credentials") {
-        const isAlreadyUser = await prisma.user.findUnique({
-          where: {
-            email: params.user.email as string,
-          },
+        const user = await prisma.user.findUnique({
+          where: { email: params.user.email as string },
         });
-        // if (isAlreadyUser) {
-        //   console.log("Got here");
-        //   throw new Error("EmailAlreadyExists");
-        // }
-        const newUser = { ...params.user } as any;
-        newUser.dummy = params.account?.provider;
-        params.user = newUser;
-        console.log("In Signin", params);
+        if (user && user?.provider !== params.account?.provider)
+          throw new Error("EmailAlreadyExists");
       }
       return true;
     },
@@ -55,20 +48,12 @@ export const authOptions = {
   },
   events: {
     async signIn({ user, account, profile, isNewUser }) {
+      console.log("Sign in Event");
+      console.log({ user }, { account }, { profile }, { isNewUser });
       const newUser = { ...user } as any;
       console.log({ newUser });
       if (isNewUser && newUser.provider === null) {
-        const newName = user.name?.split(" ") as string[];
-        await prisma.user.update({
-          where: {
-            email: user.email as string,
-          },
-          data: {
-            provider: account?.provider as Provider,
-            first_name: newName[0],
-            last_name: newName[1],
-          },
-        });
+        await updateUser(prisma, account?.provider as Provider, user);
       }
     },
   },
@@ -90,16 +75,18 @@ export const authOptions = {
       async authorize(credentials, req) {
         // Find user within database
         console.log("Authorize", req);
-        const user = await prisma.user.findUnique({
-          where: credentials?.email.includes("@")
-            ? { email: credentials?.email }
-            : { username: credentials?.email },
+        const user = await prisma.user.findFirst({
+          where: {
+            AND: [
+              { provider: "credentials" },
+              credentials?.email.includes("@")
+                ? { email: credentials.email }
+                : { username: credentials?.email },
+            ],
+          },
         });
 
         if (user) {
-          if (user.provider !== "credentials")
-            throw new Error(`Please sign in with ${user.provider}`);
-
           const matchingPassword =
             user.password &&
             credentials?.password &&
@@ -110,7 +97,7 @@ export const authOptions = {
           return user;
         }
 
-        throw new Error("User does not exist");
+        throw new Error("User does not exist or must sign in with provider!");
       },
     }),
   ],

@@ -9,14 +9,21 @@ export default function Error() {
   const search = searchParams.get("error");
   let text;
 
-  if (search === "AccessDenied")
-    text = "You are not authorized to sign in for some reason.";
-  else if (search === "EmailAlreadyExists")
-    text =
-      "Email already exists, please click the button below to sign in with your email and password";
-  else
-    text =
-      "Some unexpected error occured during login. Click the button below and try again.";
+  switch (search) {
+    case "AccessDenied":
+      text = "You are not authorized to sign in for some reason.";
+      break;
+    case "OAuthAccountNotLinked":
+      text = "Email already exists. Please sign in with a provider";
+      break;
+    case "EmailAlreadyExists":
+      text =
+        "Email already associated with a different account. Please sign in with the correct provider.";
+      break;
+    default:
+      text =
+        "Some unexpected error occured during login. Click the button below and try again.";
+  }
 
   return (
     <div className="w-screen h-screen flex flex-col space-y-4 justify-center items-center">

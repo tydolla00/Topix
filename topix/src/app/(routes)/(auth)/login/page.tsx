@@ -1,17 +1,16 @@
 "use client";
 
-import { redirect } from "next/navigation";
-import { InputForm } from "../components/input";
+import { InputForm } from "../../../components/input";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/shadcn/ui/use-toast";
 import { Toaster } from "@/shadcn/ui/toaster";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { domain } from "@/lib/utils";
 
 export default function Login() {
   const { data: session } = useSession();
-  const router = useRouter();
+  if (session?.user) redirect("/");
 
   const callbackUrl = domain;
 
@@ -33,8 +32,6 @@ export default function Login() {
       });
       return;
     }
-    router.push("/");
-    // ! call login function here ?
   };
   return (
     <>

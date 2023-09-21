@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shadcn/ui/card";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 
@@ -16,7 +17,7 @@ export const QuizCard = ({
   url,
 }: {
   title: string;
-  img: StaticImageData;
+  img: string | StaticImageData;
   description: string;
   url: string;
 }) => {

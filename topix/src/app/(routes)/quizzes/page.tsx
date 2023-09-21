@@ -1,12 +1,10 @@
-import { QuizCard } from "../components/card";
+import { QuizCard } from "../../components/card";
 import Harry_Potter from "@/app/assets/harry-potter.webp";
 import _Madden from "@/app/assets/madden24.webp";
 import _Math from "@/app/assets/math.jpeg";
 import _RDC from "@/app/assets/rdcworld.png";
 import _NBA from "@/app/assets/nba.webp";
 import Video_Game from "@/app/assets/videogame.png";
-import { StaticImageData } from "next/image";
-import { quizzes } from "@prisma/client";
 import { prisma } from "@/lib/utils";
 
 const fetchQuizzes = async () => {
@@ -43,7 +41,7 @@ export default async function Quizzes() {
             key={quizcard.name}
             title={quizcard.name}
             description={quizcard.description}
-            img={maps.get(quizcard.path as string) as StaticImageData}
+            img={maps.get(quizcard.path || "harrypotter") || ""}
             url={quizcard.url}
           />
         ))}
