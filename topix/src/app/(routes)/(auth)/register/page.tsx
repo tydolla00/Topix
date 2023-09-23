@@ -12,7 +12,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 export default function Register() {
-  const session = useSession();
+  const { data: session } = useSession();
   if (session) redirect("/");
 
   const { toast } = useToast();

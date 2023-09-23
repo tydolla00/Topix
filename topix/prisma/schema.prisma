@@ -40,7 +40,7 @@ model quizzes {
   name        String  @db.VarChar(100) @unique
   description String  @db.VarChar(1000)
   path        String? @db.VarChar(100)
-  url         String @unique
+  url         String  @unique
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -72,43 +72,50 @@ model tv {
 }
 
 model account {
-  id                 String  @id @default(cuid())
+  id                 String      @id @default(cuid())
   userId             String
   type               String
   provider           String
   providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
+  refresh_token      String?     @db.Text
+  access_token       String?     @db.Text
   expires_at         Int?
   token_type         String?
   scope              String?
-  id_token           String?  @db.Text
+  id_token           String?     @db.Text
   session_state      String?
-
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
   user user @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
 
 model session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
+  id           String      @id @default(cuid())
+  sessionToken String      @unique
   userId       String
   expires      DateTime
-  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  user         user        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model user {
-  id            String    @id @default(cuid())
-  username      String?   @unique @db.VarChar(50)
+  id            String      @id @default(cuid())
+  username      String?     @unique @db.VarChar(50)
   first_name    String?   
   last_name     String?   
-  name          String
-  email         String   @unique
+  name          String?       
+  email         String      @unique
   password      String?
   emailVerified DateTime?
   image         String?
+  birthday      DateTime? 
+  pronouns      Pronouns?
   provider      Provider?
+  createdAt     DateTime?    @default(now())
+  updatedAt     DateTime?    @updatedAt
   accounts      account[]
   sessions      session[]
 }
@@ -125,4 +132,10 @@ enum Provider{
   google
   github
   credentials
+}
+
+enum Pronouns{
+  HeHim
+  SheHer
+  Other
 }

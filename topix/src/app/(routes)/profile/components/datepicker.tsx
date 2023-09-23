@@ -9,9 +9,11 @@ import { Button } from "@/shadcn/ui/button";
 import { Calendar } from "@/shadcn/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shadcn/ui/popover";
 
-export function DatePicker() {
-  const [date, setDate] = React.useState<Date>();
-
+export function DatePicker({
+  birthday,
+  setBirthday,
+  register,
+}: DatePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -19,21 +21,28 @@ export function DatePicker() {
           variant={"default"}
           className={cn(
             "w-[280px] justify-start text-left font-normal",
-            !date && "text-muted-foreground"
+            !birthday && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          {birthday ? format(birthday, "PPP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
         <Calendar
+          {...register("birthday")}
           mode="single"
-          selected={date}
-          onSelect={setDate}
+          selected={birthday}
+          onSelect={setBirthday}
           initialFocus
         />
       </PopoverContent>
     </Popover>
   );
 }
+
+type DatePickerProps = {
+  birthday: Date | undefined;
+  setBirthday: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  register: any;
+};
