@@ -13,6 +13,7 @@ export const updateUser = async (
   provider: $Enums.Provider,
   user: User
 ) => {
+  console.log("Update User in Github", { user });
   switch (provider) {
     case "google":
       const newName = user.name?.split(" ") as string[];

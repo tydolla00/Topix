@@ -9,7 +9,10 @@ import { FileWithPath } from "@uploadthing/react";
 import { generateReactHelpers, useDropzone } from "@uploadthing/react/hooks";
 import { OurFileRouter } from "@/app/api/uploadthing/core";
 import { useSession } from "next-auth/react";
-import { generateClientDropzoneAccept } from "uploadthing/client";
+import {
+  UploadFileResponse,
+  generateClientDropzoneAccept,
+} from "uploadthing/client";
 import { Button } from "@/shadcn/ui/button";
 
 export default function FileUpload({
@@ -80,7 +83,14 @@ export default function FileUpload({
           <button
             type="button"
             className={`btn btn-neutral ${!fileUploaded && "animate-bounce"}`}
-            onClick={() => startUpload(file)}
+            onClick={async () => {
+              const res = await startUpload(file);
+              if (res)
+                update({
+                  ...session,
+                  user: { ...session?.user, image: res[0].url },
+                });
+            }}
           >
             Upload Photo.
           </button>

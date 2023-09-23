@@ -18,7 +18,7 @@ export const authOptions = {
   adapter: PrismaAdapter(prisma),
   callbacks: {
     async signIn(params) {
-      console.log("Preparams", { params });
+      console.log("Sign In Callback Invoked");
       //   User signed in with a provider
       if (params.account?.provider != "credentials") {
         const user = await prisma.user.findUnique({
@@ -30,15 +30,18 @@ export const authOptions = {
       return true;
     },
     async session({ session, token }) {
-      console.log("Session", session, token);
+      console.log("Session callback invoked");
       if (session.user?.name) session.user.name = token.name;
       return session;
     },
-    async jwt({ token, trigger, user }) {
+    async jwt({ token, trigger, user, session }) {
       // * User only available on first run.
-      console.log("In JWT", user, token);
+      console.log("JWT callback invoked");
       if (trigger === "update") {
-        console.log("Update", token, trigger, user);
+        console.log("JWT Update invoked");
+        token.picture = session.user.image;
+        console.log({ token, user, session });
+        return { ...token, ...session.user };
       }
       let newUser = { ...user } as any;
       if (newUser.first_name && newUser.last_name)
@@ -48,10 +51,8 @@ export const authOptions = {
   },
   events: {
     async signIn({ user, account, profile, isNewUser }) {
-      console.log("Sign in Event");
-      console.log({ user }, { account }, { profile }, { isNewUser });
+      console.log("Sign in event invoked.");
       const newUser = { ...user } as any;
-      console.log({ newUser });
       if (isNewUser && newUser.provider === null) {
         await updateUser(prisma, account?.provider as Provider, user);
       }
@@ -74,7 +75,7 @@ export const authOptions = {
       },
       async authorize(credentials, req) {
         // Find user within database
-        console.log("Authorize", req);
+        console.log("Sign in with credentials invoked!");
         const user = await prisma.user.findFirst({
           where: {
             AND: [
