@@ -3,6 +3,8 @@ import { capitalizeFirstLetter } from "@/lib/functions";
 import { Avatar, AvatarImage } from "@/shadcn/ui/avatar";
 import { prisma } from "@/lib/utils";
 import { Form } from "./components/form";
+import { Suspense } from "react";
+import Loading from "@/app/loading";
 
 export default async function Profile() {
   const session = await getServerSession();
@@ -11,8 +13,8 @@ export default async function Profile() {
     select: {
       username: true,
       name: true,
-      first_name: true,
-      last_name: true,
+      firstName: true,
+      lastName: true,
       email: true,
       birthday: true,
       pronouns: true,
@@ -20,10 +22,8 @@ export default async function Profile() {
     },
   });
 
-  console.log({ user });
-
   return (
-    <>
+    <Suspense fallback={<Loading />}>
       <div className="grid sm:grid-cols-2">
         <div>
           <h1 className="font-bold text-2xl m-3">My Profile {user?.name}</h1>
@@ -42,7 +42,6 @@ export default async function Profile() {
         </div>
         <Form user={user} />
       </div>
-      <h1 className="font-bold text-2xl m-3">Topix</h1>
-    </>
+    </Suspense>
   );
 }

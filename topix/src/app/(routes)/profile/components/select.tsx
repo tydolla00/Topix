@@ -20,7 +20,7 @@ export function PronounSelect({
   setValue: any;
 }) {
   return (
-    <Select disabled={disabled} required {...register("pronouns")}>
+    <Select disabled={disabled} {...register("pronouns")}>
       <SelectTrigger className="max-w-xs">
         <SelectValue
           onChange={(e: any) =>

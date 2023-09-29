@@ -9,32 +9,23 @@ datasource db {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model contact {
-  id         Int    @id @default(autoincrement())
-  first_name String @db.VarChar(30)
-  last_name  String @db.VarChar(30)
-  email      String @db.VarChar(50)
-  subject    String @db.VarChar(30)
-  message    String @db.VarChar(3000)
+  id         Int      @id @default(autoincrement())
+  firstName  String?  @map("first_name")     
+  lastName   String?  @map("last_name")
+  email      String   @db.VarChar(50)
+  subject    String   @db.VarChar(30)
+  message    String   @db.VarChar(3000)
 }
 
-model games {
-  id       Int      @id @default(autoincrement())
-  games_id Int?
-  name     String   @db.VarChar(100)
-  brand    String?  @db.VarChar(100)
-  timeline DateTime @db.Date
-  schema   schema?  @relation(fields: [games_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_games")
+model Scores{
+  id      Int     @id @default(autoincrement())
+  gameId  Int?    @map("game_id")
+  movieId Int?    @map("movie_id")
+  tvId    Int?    @map("tv_id")
+  game    game?   @relation(fields: [gameId], references: [id])
+  movie   movie?  @relation(fields: [movieId], references: [id])
+  tv      tv?     @relation(fields: [tvId], references: [id])     
 }
-
-model movies {
-  id        Int      @id @default(autoincrement())
-  movies_id Int?
-  name      String   @db.VarChar(100)
-  genre     String   @db.VarChar(100)
-  timeline  DateTime @db.Date
-  schema    schema?  @relation(fields: [movies_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_movies")
-}
-
 model quizzes {
   id          Int     @id @default(autoincrement())
   name        String  @db.VarChar(100) @unique
@@ -43,33 +34,87 @@ model quizzes {
   url         String  @unique
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model schema {
-  id     Int      @id @default(autoincrement())
-  type   String?  @db.VarChar(10)
-  name   String?  @db.VarChar(100)
-  path   String?  @db.VarChar(100)
-  games  games[]
-  movies movies[]
-  tv     tv[]
+model quiz{
+  id        Int     @id @default(autoincrement())
+  quizId    String  @unique 
+  questions question[]
+}
+model question{
+  id          Int     @id @default(autoincrement())
+  quizId      String  @map("quiz_id")
+  title       String
+  choiceOne   String
+  choiceTwo   String
+  choiceThree String
+  choiceFour  String
+  quiz        quiz    @relation(fields: [quizId], references: [quizId])
+}
+model games {
+  id          Int       @id @default(autoincrement())
+  img         String      
+  description String
+  path        String    @unique
 }
 
-model topix {
+model game{
   id          Int     @id @default(autoincrement())
-  name        String  @db.VarChar(100)
-  description String  @db.VarChar(1000)
-  path        String? @db.VarChar(100)
+  createdBy   String  @map("created_by")
+  title       String
+  gameId      String  @map("game_id") @default(uuid()) @unique
+  img         String?
+  description String
+  scores      Scores[]
+  topix       topix[] 
+}
+model movies {
+  id          Int       @id @default(autoincrement())
+  img         String      
+  description String
+  path        String    @unique
+}
+
+model movie{
+  id          Int     @id @default(autoincrement())
+  createdBy   String  @map("created_by")
+  title       String
+  movieId     String  @map("movie_id") @unique
+  img         String?
+  description String
+  scores      Scores[]
+  topix       topix[] 
+}
+
+
+model tvs{
+  id          Int       @id @default(autoincrement())
+  img         String      
+  description String
+  path        String    @unique
 }
 
 model tv {
-  id       Int      @id @default(autoincrement())
-  tv_id    Int?
-  name     String   @db.VarChar(100)
-  genre    String   @db.VarChar(100)
-  channel  String   @db.VarChar(100)
-  timeline DateTime @db.Date
-  schema   schema?  @relation(fields: [tv_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tv")
+  id          Int     @id @default(autoincrement())
+  createdBy   String  @map("created_by")
+  title       String
+  tvId        String  @map("tv_id") @unique
+  img         String?
+  description String
+  scores      Scores[]
+  topix       topix[] 
 }
+model topix {
+  id      Int     @id @default(autoincrement())
+  title   String
+  gameId  String? @map("game_id")
+  movieId String? @map("movie_id")
+  tvId    String? @map("tv_id")
+  img     String?  
+  link    String?
+  game    game?   @relation(fields: [gameId], references: [gameId])
+  movie   movie?  @relation(fields: [movieId], references: [movieId])
+  tv      tv?     @relation(fields: [tvId], references: [tvId])
+}
+
 
 model account {
   id                 String      @id @default(cuid())
@@ -104,8 +149,8 @@ model session {
 model user {
   id            String      @id @default(cuid())
   username      String?     @unique @db.VarChar(50)
-  first_name    String?   
-  last_name     String?   
+  firstName     String?     @map("first_name")     
+  lastName      String?     @map("last_name") 
   name          String?       
   email         String      @unique
   password      String?
@@ -127,6 +172,7 @@ model verificationToken {
 
   @@unique([identifier, token])
 }
+
 
 enum Provider{
   google

@@ -1,14 +1,17 @@
+import { Avatar, AvatarImage } from "@/shadcn/ui/avatar";
+import { Session } from "next-auth";
 import Image from "next/image";
 
-export default function ProfilePicture({ img }: { img: string }) {
+export default function ProfilePicture({ session }: { session: Session }) {
   return (
-    <Image
-      className="w-auto"
-      onError={(e) => console.error(e.target)}
-      width={200}
-      height={200}
-      src={img}
-      alt="Profile Pic"
-    />
+    <Avatar>
+      {session.user?.image ? (
+        <AvatarImage alt="Profile Pic" src={session.user.image} />
+      ) : (
+        <h2 className="font-bold text-xl text-center">
+          {session.user?.name?.at(0)?.toUpperCase()}
+        </h2>
+      )}
+    </Avatar>
   );
 }

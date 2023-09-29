@@ -19,4 +19,4 @@ export default withAuth(
 );
 
 // Specify the routes that need to be authenticated
-export const config = { matcher: ["/profile"] };
+export const config = { matcher: ["/profile", "/admin", "/settings"] };

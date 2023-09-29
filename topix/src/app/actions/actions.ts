@@ -33,8 +33,8 @@ export async function editProfile(formData: FormData) {
   await prisma.user.update({
     where: { email: user?.user?.email },
     data: {
-      first_name: name.name?.split(" ")[0],
-      last_name: name.name?.split(" ")[1],
+      firstName: name.name?.split(" ")[0],
+      lastName: name.name?.split(" ")[1],
       name: name.name && (name.name as string),
       pronouns: pronoun,
     },

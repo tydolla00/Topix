@@ -44,7 +44,7 @@ export const authOptions = {
         return { ...token, ...session.user };
       }
       let newUser = { ...user } as any;
-      if (newUser.first_name && newUser.last_name)
+      if (newUser.firstName && newUser.lastName)
         token.name = `${newUser.first_name} ${newUser.last_name}`;
       return token;
     },

@@ -23,8 +23,8 @@ export const updateUser = async (
         },
         data: {
           provider: provider,
-          first_name: newName[0],
-          last_name: newName[1],
+          firstName: newName[0],
+          lastName: newName[1],
         },
       });
       break;
