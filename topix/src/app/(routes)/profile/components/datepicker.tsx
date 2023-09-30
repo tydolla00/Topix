@@ -10,6 +10,7 @@ import { Calendar } from "@/shadcn/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shadcn/ui/popover";
 
 export function DatePicker({
+  disabled,
   birthday,
   setBirthday,
   register,
@@ -18,10 +19,12 @@ export function DatePicker({
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          disabled={disabled}
           variant={"default"}
           className={cn(
             "w-[280px] justify-start text-left font-normal",
-            !birthday && "text-muted-foreground"
+            !birthday && "text-muted-foreground",
+            disabled && "cursor-not-allowed"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
@@ -42,6 +45,7 @@ export function DatePicker({
 }
 
 type DatePickerProps = {
+  disabled: boolean;
   birthday: Date | undefined;
   setBirthday: React.Dispatch<React.SetStateAction<Date | undefined>>;
   register: any;

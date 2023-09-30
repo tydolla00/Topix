@@ -2,23 +2,20 @@
 
 import { editProfile } from "@/app/actions/actions";
 import { useState } from "react";
-import { DatePicker } from "./datepicker";
 import Modal from "@/app/components/modal";
 import FileUpload from "./uploadFile";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FieldErrors, UseFormRegister, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { $Enums } from "@prisma/client";
-import { PronounSelect } from "./select";
-import { useSession } from "next-auth/react";
-import { Input } from "@/app/components/input";
-import { capitalizeFirstLetter } from "@/lib/functions";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/shadcn/ui/tooltip";
+import { SaveChangesButton, UploadProfileButton } from "./client";
+import { InputFields } from "./inputFields";
 
 // TODO Validate Form Inputs with Schema
 export const Form = ({ user }: { user: UserProps }) => {
@@ -30,8 +27,6 @@ export const Form = ({ user }: { user: UserProps }) => {
     difference < millisecondsInOneDay
   );
 
-  const { data: session } = useSession();
-  console.log(session);
   const validationSchema = yup.object().shape({
     name: yup
       .string()
@@ -40,32 +35,46 @@ export const Form = ({ user }: { user: UserProps }) => {
         /^[A-Za-z]+( [A-Za-z]+)+$/,
         "First and Last can only contain letters and one space between words"
       ),
-    username: yup.string().notRequired().default(user?.username),
+    username: yup.string().notRequired().default(""),
     email: yup.string().email(),
     birthday: yup.date().max(new Date()).notRequired(),
-    pronouns: yup.mixed().oneOf(["He/Him", "She/Her", "Other"] as const),
-    // .notRequired(),
+    pronouns: yup
+      .mixed()
+      .oneOf(["He/Him", "She/Her", "Other"] as const)
+      .notRequired(),
   });
   const {
     register,
     reset,
     setValue,
-    formState: { errors, isDirty, isValid },
+    formState: { errors, isValid, isDirty, dirtyFields },
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
       name:
-        user?.first_name && user.last_name
-          ? `${user?.first_name} ${user?.last_name}`
+        user?.firstName && user.lastName
+          ? `${user?.firstName} ${user?.lastName}`
           : "",
       username: user?.username,
       email: user?.email,
       birthday: user?.birthday,
-      // pronouns: user?.pronouns,
+      pronouns: user?.pronouns,
     },
     mode: "onChange",
   });
 
+  console.log({ isDirty, isValid, dirtyFields }, Object.keys(dirtyFields));
+  console.log("Errors", JSON.stringify(errors));
+  console.log("Object keys ", Object.keys(dirtyFields).length === 0);
+  console.log("IsValid", !isValid);
+  console.log(
+    "Half Test",
+    (isDirty && Object.keys(dirtyFields).length === 0) || !isDirty
+  );
+  console.log(
+    "Full Test",
+    (isDirty && Object.keys(dirtyFields).length === 0) || (!isDirty && !isValid)
+  );
   const [editing, setEditing] = useState(false);
   const [fileUploaded, setFileUploaded] = useState(false);
 
@@ -77,8 +86,8 @@ export const Form = ({ user }: { user: UserProps }) => {
       label: "Full Name",
       disabled: !editing,
       defaultValue:
-        user?.first_name && user.last_name
-          ? `${user?.first_name} ${user?.last_name}`
+        user?.firstName && user.lastName
+          ? `${user?.firstName} ${user?.lastName}`
           : "",
     },
     { name: "username", disabled: true, defaultValue: user?.username || "" },
@@ -101,7 +110,7 @@ export const Form = ({ user }: { user: UserProps }) => {
   }[];
 
   const handleClick = () => {
-    if (oneday) return;
+    // if (oneday) return;
     if (editing) reset();
     setEditing(!editing);
   };
@@ -121,7 +130,7 @@ export const Form = ({ user }: { user: UserProps }) => {
             </button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Come back tomorrow to edit your profile!</p>
+            <p>{oneday && "Come back tomorrow to edit your profile!"}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -152,30 +161,14 @@ export const Form = ({ user }: { user: UserProps }) => {
       />
 
       <div className="flex w-full">
-        <button
-          disabled={oneday}
-          onClick={() => {
-            let modal: any = window;
-            modal.upload.showModal();
-          }}
-          type="button"
-          className="btn btn-ghost btn-outline"
-        >
-          Update Profile Pic
-        </button>
+        <UploadProfileButton oneday={oneday} />
         {editing && (
-          <button
-            disabled={!isDirty || !isValid}
-            onClick={() => {
-              setTimeout(() => {
-                reset();
-              }, 3000);
-            }}
-            type="submit"
-            className="btn btn-secondary ml-auto block"
-          >
-            Save Changes
-          </button>
+          <SaveChangesButton
+            isDirty={isDirty}
+            dirtyFields={dirtyFields}
+            isValid={isValid}
+            reset={reset}
+          />
         )}
       </div>
       <Modal height="h-[600px]" className="h-60" id="upload" key={"upload"}>
@@ -201,98 +194,13 @@ export const Form = ({ user }: { user: UserProps }) => {
   );
 };
 
-const InputFields = ({
-  user,
-  editing,
-  register,
-  errors,
-  setValue,
-}: InputFieldsProps) => {
-  const [birthday, setBirthday] = useState<Date>();
-
-  return (
-    <>
-      <label htmlFor="name" className="label">
-        Full Name
-      </label>
-      <input
-        className="input input-bordered w-full max-w-xs"
-        required
-        placeholder="Edit your name"
-        defaultValue={
-          user?.first_name && user.last_name
-            ? `${user?.first_name} ${user?.last_name}`
-            : ""
-        }
-        disabled={!editing}
-        {...register("name")}
-      />
-      <div className="invalid-feedback">{errors.name?.message}</div>
-      <label className="label"> Username</label>
-      <input
-        className="input input-bordered w-full max-w-xs"
-        {...register("username")}
-        placeholder="Edit your username"
-        disabled
-        defaultValue={user?.username || ""}
-      />
-      <label className="label">Email</label>
-      <input
-        className="input input-bordered w-full max-w-xs"
-        type="email"
-        {...register("email")}
-        disabled
-        defaultValue={user?.email || ""}
-      />
-
-      <label className="label">Birthday</label>
-      {editing ? (
-        <DatePicker
-          register={register}
-          birthday={birthday}
-          setBirthday={setBirthday}
-          key={"birthday"}
-        />
-      ) : (
-        <input
-          type="date"
-          className="input input-border w-full max-w-xs"
-          {...register("birthday")}
-          defaultValue={birthday?.toLocaleDateString()}
-          disabled
-          placeholder="Grab birthday from db"
-        />
-      )}
-      <div className="invalid-feedback">{errors.birthday?.message}</div>
-
-      <label className="label">Pronouns</label>
-      <PronounSelect
-        disabled={!editing}
-        defaultValue={user?.pronouns}
-        register={register}
-        setValue={setValue}
-      />
-
-      <div className="invalid-feedback">{errors.pronouns?.message}</div>
-    </>
-  );
-};
-
-type UserProps = {
+export type UserProps = {
   name: string | null;
   birthday: Date | null;
   pronouns: $Enums.Pronouns | null;
-  first_name: string | null;
-  last_name: string | null;
+  firstName: string | null;
+  lastName: string | null;
   email: string;
   username: string | null;
   updatedAt: Date | null;
 } | null;
-
-type InputFieldsProps = {
-  user: UserProps;
-  editing: boolean;
-  register: any;
-  errors: any;
-  setValue: any;
-};

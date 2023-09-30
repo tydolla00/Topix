@@ -6,6 +6,10 @@ import _RDC from "@/app/assets/rdcworld.png";
 import _NBA from "@/app/assets/nba.webp";
 import Video_Game from "@/app/assets/videogame.png";
 import { prisma } from "@/lib/utils";
+import { Metadata } from "next";
+
+// Generate metadat for dynamic options
+export const metadata: Metadata = { title: "Quizzes | Topix" };
 
 const fetchQuizzes = async () => {
   const quizzes = await prisma.quizzes.findMany();

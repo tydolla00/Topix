@@ -4,6 +4,8 @@ import Link from "next/link";
 import ProfilePicture from "./profilePicture";
 import { signOut, useSession } from "next-auth/react";
 import Modal from "./modal";
+import { Suspense } from "react";
+import { Skeleton } from "@/shadcn/ui/skeleton";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -83,12 +85,9 @@ export default function Navbar() {
             {session?.user ? (
               <div tabIndex={0} className="avatar online btn btn-circle">
                 <div className="rounded-full w-10">
-                  {/* <ProfilePicture img={session.user.image as string} /> */}
-                  {session.user.image ? (
-                    <ProfilePicture img={session.user.image} />
-                  ) : (
-                    <p>P</p>
-                  )}
+                  <Suspense fallback={<Skeleton className="w-full h-full" />}>
+                    <ProfilePicture session={session} />
+                  </Suspense>
                 </div>
               </div>
             ) : (
