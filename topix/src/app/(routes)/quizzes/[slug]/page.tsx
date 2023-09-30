@@ -24,8 +24,8 @@ export default async function Quiz({ params }: { params: { slug: string } }) {
           <p className="py-3">
             Football has been around for over a century. This quiz includes a
             range of topics starting from the 2000s with some pre 2000s
-            questions sprinkled about. If you're a fan of the game this is the
-            perfect game to test your knowledge!
+            questions sprinkled about. If you&apos;re a fan of the game this is
+            the perfect game to test your knowledge!
           </p>
           <button className="btn btn-primary ml-auto block">Play</button>
         </div>

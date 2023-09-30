@@ -1,4 +1,3 @@
--- CreateEnum
 CREATE TYPE "Provider" AS ENUM ('google', 'github', 'credentials');
 
 -- CreateEnum
@@ -7,8 +6,8 @@ CREATE TYPE "Pronouns" AS ENUM ('HeHim', 'SheHer', 'Other');
 -- CreateTable
 CREATE TABLE "contact" (
     "id" SERIAL NOT NULL,
-    "first_name" VARCHAR(30) NOT NULL,
-    "last_name" VARCHAR(30) NOT NULL,
+    "first_name" TEXT,
+    "last_name" TEXT,
     "email" VARCHAR(50) NOT NULL,
     "subject" VARCHAR(30) NOT NULL,
     "message" VARCHAR(3000) NOT NULL,
@@ -17,25 +16,13 @@ CREATE TABLE "contact" (
 );
 
 -- CreateTable
-CREATE TABLE "games" (
+CREATE TABLE "Scores" (
     "id" SERIAL NOT NULL,
-    "games_id" INTEGER,
-    "name" VARCHAR(100) NOT NULL,
-    "brand" VARCHAR(100),
-    "timeline" DATE NOT NULL,
+    "game_id" INTEGER,
+    "movie_id" INTEGER,
+    "tv_id" INTEGER,
 
-    CONSTRAINT "games_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "movies" (
-    "id" SERIAL NOT NULL,
-    "movies_id" INTEGER,
-    "name" VARCHAR(100) NOT NULL,
-    "genre" VARCHAR(100) NOT NULL,
-    "timeline" DATE NOT NULL,
-
-    CONSTRAINT "movies_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Scores_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -50,35 +37,103 @@ CREATE TABLE "quizzes" (
 );
 
 -- CreateTable
-CREATE TABLE "schema" (
+CREATE TABLE "quiz" (
     "id" SERIAL NOT NULL,
-    "type" VARCHAR(10),
-    "name" VARCHAR(100),
-    "path" VARCHAR(100),
+    "quizId" TEXT NOT NULL,
 
-    CONSTRAINT "schema_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "quiz_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "topix" (
+CREATE TABLE "question" (
     "id" SERIAL NOT NULL,
-    "name" VARCHAR(100) NOT NULL,
-    "description" VARCHAR(1000) NOT NULL,
-    "path" VARCHAR(100),
+    "quiz_id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "choiceOne" TEXT NOT NULL,
+    "choiceTwo" TEXT NOT NULL,
+    "choiceThree" TEXT NOT NULL,
+    "choiceFour" TEXT NOT NULL,
 
-    CONSTRAINT "topix_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "question_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "games" (
+    "id" SERIAL NOT NULL,
+    "img" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "path" TEXT NOT NULL,
+
+    CONSTRAINT "games_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "game" (
+    "id" SERIAL NOT NULL,
+    "created_by" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "game_id" TEXT NOT NULL,
+    "img" TEXT,
+    "description" TEXT NOT NULL,
+
+    CONSTRAINT "game_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "movies" (
+    "id" SERIAL NOT NULL,
+    "img" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "path" TEXT NOT NULL,
+
+    CONSTRAINT "movies_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "movie" (
+    "id" SERIAL NOT NULL,
+    "created_by" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "movie_id" TEXT NOT NULL,
+    "img" TEXT,
+    "description" TEXT NOT NULL,
+
+    CONSTRAINT "movie_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "tvs" (
+    "id" SERIAL NOT NULL,
+    "img" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "path" TEXT NOT NULL,
+
+    CONSTRAINT "tvs_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "tv" (
     "id" SERIAL NOT NULL,
-    "tv_id" INTEGER,
-    "name" VARCHAR(100) NOT NULL,
-    "genre" VARCHAR(100) NOT NULL,
-    "channel" VARCHAR(100) NOT NULL,
-    "timeline" DATE NOT NULL,
+    "created_by" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "tv_id" TEXT NOT NULL,
+    "img" TEXT,
+    "description" TEXT NOT NULL,
 
     CONSTRAINT "tv_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "topix" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "game_id" TEXT,
+    "movie_id" TEXT,
+    "tv_id" TEXT,
+    "img" TEXT,
+    "link" TEXT,
+
+    CONSTRAINT "topix_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -147,6 +202,27 @@ CREATE UNIQUE INDEX "quizzes_name_key" ON "quizzes"("name");
 CREATE UNIQUE INDEX "quizzes_url_key" ON "quizzes"("url");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "quiz_quizId_key" ON "quiz"("quizId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "games_path_key" ON "games"("path");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "game_game_id_key" ON "game"("game_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "movies_path_key" ON "movies"("path");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "movie_movie_id_key" ON "movie"("movie_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "tvs_path_key" ON "tvs"("path");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "tv_tv_id_key" ON "tv"("tv_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "account_provider_providerAccountId_key" ON "account"("provider", "providerAccountId");
 
 -- CreateIndex
@@ -165,13 +241,25 @@ CREATE UNIQUE INDEX "verificationToken_token_key" ON "verificationToken"("token"
 CREATE UNIQUE INDEX "verificationToken_identifier_token_key" ON "verificationToken"("identifier", "token");
 
 -- AddForeignKey
-ALTER TABLE "games" ADD CONSTRAINT "fk_games" FOREIGN KEY ("games_id") REFERENCES "schema"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "Scores" ADD CONSTRAINT "Scores_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "game"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "movies" ADD CONSTRAINT "fk_movies" FOREIGN KEY ("movies_id") REFERENCES "schema"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "Scores" ADD CONSTRAINT "Scores_movie_id_fkey" FOREIGN KEY ("movie_id") REFERENCES "movie"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "tv" ADD CONSTRAINT "fk_tv" FOREIGN KEY ("tv_id") REFERENCES "schema"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "Scores" ADD CONSTRAINT "Scores_tv_id_fkey" FOREIGN KEY ("tv_id") REFERENCES "tv"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "question" ADD CONSTRAINT "question_quiz_id_fkey" FOREIGN KEY ("quiz_id") REFERENCES "quiz"("quizId") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "topix" ADD CONSTRAINT "topix_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "game"("game_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "topix" ADD CONSTRAINT "topix_movie_id_fkey" FOREIGN KEY ("movie_id") REFERENCES "movie"("movie_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "topix" ADD CONSTRAINT "topix_tv_id_fkey" FOREIGN KEY ("tv_id") REFERENCES "tv"("tv_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "account" ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
