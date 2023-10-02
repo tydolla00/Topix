@@ -13,7 +13,7 @@ export const updateUser = async (
   provider: $Enums.Provider,
   user: User
 ) => {
-  console.log("Update User in Github", { user });
+  console.log("Update User in " + provider, { user });
   switch (provider) {
     case "google":
       const newName = user.name?.split(" ") as string[];
@@ -25,6 +25,7 @@ export const updateUser = async (
           provider: provider,
           firstName: newName[0],
           lastName: newName[1],
+          role: "user",
         },
       });
       break;
@@ -35,6 +36,7 @@ export const updateUser = async (
         data: {
           provider: provider,
           username: user.name,
+          role: "user",
         },
       });
       break;

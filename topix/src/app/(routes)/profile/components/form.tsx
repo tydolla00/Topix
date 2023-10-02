@@ -2,6 +2,7 @@
 
 import { editProfile } from "@/app/actions/actions";
 import { useState } from "react";
+import Image from "next/image";
 import Modal from "@/app/components/modal";
 import FileUpload from "./uploadFile";
 import * as yup from "yup";
@@ -16,6 +17,8 @@ import {
 } from "@/shadcn/ui/tooltip";
 import { SaveChangesButton, UploadProfileButton } from "./client";
 import { InputFields } from "./inputFields";
+import { useUploadReducer } from "@/app/hooks/useUploadReducer";
+import { useSession } from "next-auth/react";
 
 // TODO Validate Form Inputs with Schema
 export const Form = ({ user }: { user: UserProps }) => {
@@ -23,9 +26,10 @@ export const Form = ({ user }: { user: UserProps }) => {
   const difference = Number(today) - Number(user?.updatedAt);
   const millisecondsInOneDay = 24 * 60 * 60 * 1000; // 24 hours * 60 minutes * 60 seconds * 1000 milliseconds
 
-  const [oneday, setOneDay] = useState<boolean>(
-    difference < millisecondsInOneDay
-  );
+  const oneday = difference < millisecondsInOneDay;
+
+  const { state, dispatch, startUpload } = useUploadReducer();
+  const { data: session, update } = useSession();
 
   const validationSchema = yup.object().shape({
     name: yup
@@ -63,18 +67,6 @@ export const Form = ({ user }: { user: UserProps }) => {
     mode: "onChange",
   });
 
-  console.log({ isDirty, isValid, dirtyFields }, Object.keys(dirtyFields));
-  console.log("Errors", JSON.stringify(errors));
-  console.log("Object keys ", Object.keys(dirtyFields).length === 0);
-  console.log("IsValid", !isValid);
-  console.log(
-    "Half Test",
-    (isDirty && Object.keys(dirtyFields).length === 0) || !isDirty
-  );
-  console.log(
-    "Full Test",
-    (isDirty && Object.keys(dirtyFields).length === 0) || (!isDirty && !isValid)
-  );
   const [editing, setEditing] = useState(false);
   const [fileUploaded, setFileUploaded] = useState(false);
 
@@ -99,18 +91,8 @@ export const Form = ({ user }: { user: UserProps }) => {
     },
   ];
 
-  type DataProps = {
-    error?: string;
-    name: "name" | "email" | "username" | "birthday" | "pronouns";
-    label?: string;
-    required?: boolean;
-    disabled: boolean;
-    defaultValue: string;
-    type?: "text" | "email";
-  }[];
-
   const handleClick = () => {
-    // if (oneday) return;
+    if (oneday) return;
     if (editing) reset();
     setEditing(!editing);
   };
@@ -177,10 +159,34 @@ export const Form = ({ user }: { user: UserProps }) => {
             Update your profile pic!
           </h1>
           <div className="border border-white h-36 w-full">
-            <FileUpload
-              fileUploaded={fileUploaded}
-              setFileUploaded={setFileUploaded}
-            />
+            <FileUpload dispatch={dispatch} />
+
+            {state.filePreview && (
+              <Image
+                src={state.filePreview}
+                height={400}
+                width={400}
+                alt="uploaded file"
+              />
+            )}
+            {state.file && state.file?.length !== 0 && (
+              <button
+                type="button"
+                className={`btn btn-neutral ${
+                  !state.fileUploaded && "animate-bounce"
+                }`}
+                onClick={async () => {
+                  const res = await startUpload(state.file as File[]);
+                  if (res)
+                    update({
+                      ...session,
+                      user: { ...session?.user, image: res[0].url },
+                    });
+                }}
+              >
+                Upload Photo.
+              </button>
+            )}
             <button
               disabled={fileUploaded}
               className={`btn btn-error w-full my-5`}
@@ -204,3 +210,13 @@ export type UserProps = {
   username: string | null;
   updatedAt: Date | null;
 } | null;
+
+type DataProps = {
+  error?: string;
+  name: "name" | "email" | "username" | "birthday" | "pronouns";
+  label?: string;
+  required?: boolean;
+  disabled: boolean;
+  defaultValue: string;
+  type?: "text" | "email";
+}[];

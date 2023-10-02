@@ -31,8 +31,13 @@ export const authOptions = {
     },
     async session({ session, token }) {
       console.log("Session callback invoked");
-      if (session.user?.name) session.user.name = token.name;
-      return session;
+      const newSession = { ...session } as any;
+      if (session.user?.name) {
+        newSession.user.name = token.name;
+        newSession.user.role = token.role;
+      }
+
+      return newSession;
     },
     async jwt({ token, trigger, user, session }) {
       // * User only available on first run.
@@ -44,14 +49,17 @@ export const authOptions = {
         return { ...token, ...session.user };
       }
       let newUser = { ...user } as any;
-      if (newUser.firstName && newUser.lastName)
-        token.name = `${newUser.first_name} ${newUser.last_name}`;
-      return token;
+      let newToken = { ...token } as any;
+      if (newUser.firstName && newUser.lastName) {
+        newToken.name = `${newUser.firstName} ${newUser.lastName}`;
+        newToken.role = newUser.role;
+      }
+      return newToken;
     },
   },
   events: {
     async signIn({ user, account, profile, isNewUser }) {
-      console.log("Sign in event invoked.");
+      console.log("Sign in event invoked.", user);
       const newUser = { ...user } as any;
       if (isNewUser && newUser.provider === null) {
         await updateUser(prisma, account?.provider as Provider, user);
