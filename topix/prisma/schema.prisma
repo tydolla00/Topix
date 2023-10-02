@@ -8,6 +8,18 @@ datasource db {
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model image {
+  id      Int      @id @default(autoincrement())
+  fileKey String?  @map("file_key")
+  link    String
+  games   games?
+  game    game?
+  tvs     tvs?
+  tv      tv?
+  movies  movies?
+  movie   movie?
+
+}
 model contact {
   id         Int      @id @default(autoincrement())
   firstName  String?  @map("first_name")     
@@ -51,7 +63,8 @@ model question{
 }
 model games {
   id          Int       @id @default(autoincrement())
-  img         String      
+  img         image    @relation(fields: [imageId], references: [id])
+  imageId     Int      @map("image_id") @unique      
   description String
   path        String    @unique
 }
@@ -60,25 +73,28 @@ model game{
   id          Int     @id @default(autoincrement())
   createdBy   String  @map("created_by")
   title       String
-  gameId      String  @map("game_id") @default(uuid()) @unique
-  img         String?
+  topixId     String  @map("game_id") @default(uuid()) @unique
+  img         image?  @relation(fields: [imageId], references: [id])
+  imageId     Int?    @map("image_id") @unique
   description String
   scores      Scores[]
   topix       topix[] 
 }
 model movies {
-  id          Int       @id @default(autoincrement())
-  img         String      
+  id          Int      @id @default(autoincrement())
+  img         image    @relation(fields: [imageId], references: [id]) 
+  imageId     Int      @map("image_id") @unique      
   description String
-  path        String    @unique
+  path        String   @unique
 }
 
 model movie{
   id          Int     @id @default(autoincrement())
   createdBy   String  @map("created_by")
   title       String
-  movieId     String  @map("movie_id") @unique
-  img         String?
+  topixId     String  @map("movie_id") @unique
+  img         image?  @relation(fields: [imageId], references: [id])
+  imageId     Int?    @map("image_id") @unique
   description String
   scores      Scores[]
   topix       topix[] 
@@ -87,7 +103,8 @@ model movie{
 
 model tvs{
   id          Int       @id @default(autoincrement())
-  img         String      
+  img         image     @relation(fields: [imageId], references: [id])
+  imageId     Int       @map("image_id") @unique      
   description String
   path        String    @unique
 }
@@ -96,8 +113,9 @@ model tv {
   id          Int     @id @default(autoincrement())
   createdBy   String  @map("created_by")
   title       String
-  tvId        String  @map("tv_id") @unique
-  img         String?
+  topixId     String  @map("tv_id") @unique
+  img         image?  @relation(fields: [imageId], references: [id])
+  imageId     Int?    @map("image_id") @unique
   description String
   scores      Scores[]
   topix       topix[] 
@@ -110,9 +128,9 @@ model topix {
   tvId    String? @map("tv_id")
   img     String?  
   link    String?
-  game    game?   @relation(fields: [gameId], references: [gameId])
-  movie   movie?  @relation(fields: [movieId], references: [movieId])
-  tv      tv?     @relation(fields: [tvId], references: [tvId])
+  game    game?   @relation(fields: [gameId], references: [topixId])
+  movie   movie?  @relation(fields: [movieId], references: [topixId])
+  tv      tv?     @relation(fields: [tvId], references: [topixId])
 }
 
 
@@ -131,7 +149,7 @@ model account {
   session_state      String?
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
-  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user               user        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -148,12 +166,14 @@ model session {
 
 model user {
   id            String      @id @default(cuid())
+  imageId       Int?        @map("image_id") @unique
   username      String?     @unique @db.VarChar(50)
   firstName     String?     @map("first_name")     
   lastName      String?     @map("last_name") 
   name          String?       
   email         String      @unique
   password      String?
+  role          Role?       @default(user)
   emailVerified DateTime?
   image         String?
   birthday      DateTime? 
@@ -184,4 +204,9 @@ enum Pronouns{
   HeHim
   SheHer
   Other
+}
+
+enum Role{
+  admin
+  user
 }

@@ -7,10 +7,9 @@ const f = createUploadthing();
 
 const auth = async (req: Request) => {
   const session = await getServerSession(authOptions);
-  console.log("Is session null", session);
   if (!session) return false;
   return { email: session.user?.email, session };
-}; // Fake auth function
+};
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
@@ -26,6 +25,9 @@ export const ourFileRouter = {
 
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
       return { email: user.email as string, session: user.session };
+    })
+    .onUploadError(async (e) => {
+      console.log(e);
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload

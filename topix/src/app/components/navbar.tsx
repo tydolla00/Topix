@@ -9,6 +9,7 @@ import { Skeleton } from "@/shadcn/ui/skeleton";
 
 export default function Navbar() {
   const { data: session } = useSession();
+  // console.log(session);
   return (
     <div>
       <nav className="navbar bg-base-100">
@@ -127,9 +128,12 @@ export default function Navbar() {
                   <li>
                     <Link href="/profile">My Profile</Link>
                   </li>
-                  <li>
-                    <Link href="/admin">Admin Dashboard</Link>
-                  </li>
+                  {/* @ts-ignore */}
+                  {session.user.role === "admin" && (
+                    <li>
+                      <Link href="/admin">Admin Dashboard</Link>
+                    </li>
+                  )}
                   <li>
                     <div onClick={() => signOut()}>Log out</div>
                   </li>
