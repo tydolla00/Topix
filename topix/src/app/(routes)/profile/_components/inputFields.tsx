@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { DatePicker } from "./datepicker";
+import { DatePicker } from "../../../_components/datepicker";
 import { PronounSelect } from "./select";
 import { UserProps } from "./form";
 import { UseFormSetValue } from "react-hook-form";

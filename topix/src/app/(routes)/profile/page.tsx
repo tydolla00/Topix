@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { capitalizeFirstLetter } from "@/lib/functions";
 import { Avatar, AvatarImage } from "@/shadcn/ui/avatar";
 import { prisma } from "@/lib/utils";
-import { Form } from "./components/form";
+import { Form } from "./_components/form";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
 

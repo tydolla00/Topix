@@ -1,6 +1,7 @@
 "use client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Select, TopixInput } from "@/app/(routes)/admin/components/server";
+import { Select } from "./select";
+import { TopixInput } from "./input";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Sheet from "./sheet";
@@ -8,7 +9,6 @@ import * as yup from "yup";
 import { useMyFetch } from "../hooks/useFetch";
 import { useUploadReducer } from "../hooks/useUploadReducer";
 import { Toaster } from "@/shadcn/ui/toaster";
-import { prisma } from "@/lib/utils";
 
 const databases = ["game", "movie", "tv", "user", "games", "movies", "tvs"];
 const crud = ["CREATE", "UPDATE", "DELETE"];
@@ -31,6 +31,21 @@ export const validationSchema = yup.object().shape({
   title: topixClause,
   img: yup.mixed().notRequired(),
   description: topixClause || homePageClause,
+  topix: yup
+    .array()
+    .of(
+      yup.object().shape({
+        name: yup.string().ensure().required(),
+        type: yup.mixed().required(),
+      })
+    )
+    .min(16, "You need at least 16 topix!")
+    .max(64, "No more than 64 topix!")
+    .when(["database", "crud"], {
+      is: (db: string, crud: string) =>
+        ["game", "movie", "tv"].includes(db) && crud === "CREATE",
+      then: (schmea) => schmea.required(),
+    }),
   topixId: topixClause,
   //   games/movies/tvs
   path: homePageClause,
@@ -79,21 +94,6 @@ export default function SheetForm() {
       console.log(res);
       const update = await fetchData(createData);
       console.log(update);
-      // const update = await prisma.game.create({
-      //   data: {
-      //     createdBy: data.createdBy,
-      //     title: data.title,
-      //     topixId: data.topixId,
-      //     description: data.description,
-      //     img: {
-      //       create: {
-      //         fileKey: res && res[0].key,
-      //         link: (res && res[0].url) as string,
-      //       },
-      //     },
-      //   },
-      // });
-      //   if res set file key and img. Maybe make image table and store info there.
     }
     // then submit form with axios to api.
     console.log({ data });
@@ -107,6 +107,7 @@ export default function SheetForm() {
       open={open}
       setOpen={setOpen}
       title="Modify Database"
+      triggerText="Edit Database"
       description="Make changes to database here. Save when done."
       reset={reset}
     >

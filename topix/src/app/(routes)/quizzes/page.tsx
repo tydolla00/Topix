@@ -1,4 +1,4 @@
-import { QuizCard } from "../../components/card";
+import { QuizCard } from "../../_components/card";
 import Harry_Potter from "@/app/assets/harry-potter.webp";
 import _Madden from "@/app/assets/madden24.webp";
 import _Math from "@/app/assets/math.jpeg";

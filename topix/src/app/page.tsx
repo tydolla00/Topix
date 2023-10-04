@@ -1,7 +1,7 @@
 // ! import Slider from "../components/slider";
-import { Stack } from "./components/stack";
-import { Carousel } from "./components/carousel";
-import { Accordion } from "./components/accordion";
+import { Stack } from "./_components/stack";
+import { Carousel } from "./_components/carousel";
+import { Accordion } from "./_components/accordion";
 
 export default async function Home() {
   const userSubmittedData: Stack = [
