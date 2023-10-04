@@ -4,6 +4,7 @@ import * as React from "react";
 import FileUpload from "./uploadFile";
 import { Action } from "../hooks/useUploadReducer";
 import { TopixFields } from "./input-client";
+import { Input } from "@/shadcn/ui/input";
 
 export const InputForm = ({
   label,
@@ -65,14 +66,14 @@ export const FileInput = React.forwardRef<
 ));
 FileInput.displayName = "FileInput";
 
-export const Input = ({ register, ...props }: InputProps) => (
-  <input
-    className="input input-bordered w-full max-w-sm"
-    type="text"
-    {...register(props.name)}
-    {...props}
-  />
-);
+// export const Input = ({ register, ...props }: InputProps) => (
+//   <input
+//     className="input input-bordered w-full max-w-sm"
+//     type="text"
+//     {...register(props.name)}
+//     {...props}
+//   />
+// );
 
 export const TopixInput = ({
   control,
