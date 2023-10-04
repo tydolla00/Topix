@@ -1,6 +1,6 @@
 "use client";
 
-import { InputForm } from "../../../components/input";
+import { InputForm } from "../../../_components/input";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/shadcn/ui/use-toast";
 import { Toaster } from "@/shadcn/ui/toaster";

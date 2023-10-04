@@ -1,8 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import EntryPoint from "./components/entryPoint";
-import Navbar from "./components/navbar";
-import Footer from "./components/footer";
+import EntryPoint from "./_components/entryPoint";
+import Navbar from "./_components/navbar";
+import Footer from "./_components/footer";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 export const metadata: Metadata = {

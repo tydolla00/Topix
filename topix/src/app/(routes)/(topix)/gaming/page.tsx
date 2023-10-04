@@ -1,10 +1,11 @@
-import { TopixCard } from "@/app/components/card";
+import { TopixCard } from "@/app/_components/card";
 import { ShuffleIcon } from "lucide-react";
 import Xbox from "@/app/assets/xbox.png";
 import Playstation from "@/app/assets/playstation.png";
 import Nintendo from "@/app/assets/nintendo.png";
 import VideoGame from "@/app/assets/videogame.png";
 import Youtube from "@/app/assets/youtube.webp";
+import TopixForm from "@/app/_components/form";
 
 export default function Gaming() {
   const data = [
@@ -57,6 +58,7 @@ export default function Gaming() {
         Random
         <ShuffleIcon />
       </button>
+      <TopixForm database="game" sheetTitle="Create your own Gaming Topix!" />
       <div className="flex flex-wrap gap-2">
         {data.map((cardItem) => (
           <div key={cardItem.title} className="basis-1/3">

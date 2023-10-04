@@ -3,8 +3,8 @@
 import { editProfile } from "@/app/actions/actions";
 import { useState } from "react";
 import Image from "next/image";
-import Modal from "@/app/components/modal";
-import FileUpload from "./uploadFile";
+import Modal from "@/app/_components/modal";
+import FileUpload from "../../../_components/uploadFile";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";

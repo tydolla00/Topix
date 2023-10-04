@@ -1,6 +1,6 @@
 "use client";
 
-import { ValidatedFormInput } from "@/app/components/input";
+import { ValidatedFormInput } from "@/app/_components/input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";

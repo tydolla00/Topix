@@ -1,4 +1,5 @@
 import { Avatar, AvatarImage } from "@/shadcn/ui/avatar";
+import { User } from "lucide-react";
 import { Session } from "next-auth";
 import Image from "next/image";
 
@@ -8,9 +9,9 @@ export default function ProfilePicture({ session }: { session: Session }) {
       {session.user?.image ? (
         <AvatarImage alt="Profile Pic" src={session.user.image} />
       ) : (
-        <h2 className="font-bold text-xl text-center">
-          {session.user?.name?.at(0)?.toUpperCase()}
-        </h2>
+        <div className="flex justify-center items-center w-full text-2xl">
+          <User size={40} />
+        </div>
       )}
     </Avatar>
   );

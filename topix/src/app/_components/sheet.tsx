@@ -13,6 +13,7 @@ import { Dispatch, SetStateAction } from "react";
 
 export default function Sheet({
   title,
+  triggerText,
   description,
   children,
   reset,
@@ -23,7 +24,7 @@ export default function Sheet({
     <ShadcnSheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button type="button" variant={"outline"}>
-          Edit Database
+          {triggerText}
         </Button>
       </SheetTrigger>
       <SheetContent id="sheet" className="overflow-y-scroll max-h-screen">
@@ -35,7 +36,7 @@ export default function Sheet({
         <SheetFooter>
           <SheetClose asChild>
             <Button className="mt-3" type="submit">
-              Save
+              Close
             </Button>
           </SheetClose>
         </SheetFooter>
@@ -46,9 +47,10 @@ export default function Sheet({
 
 type SheetProps = {
   title: string;
+  triggerText: string;
   description: string;
   children: React.ReactNode;
   reset(): void;
-  open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  open?: boolean;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 };

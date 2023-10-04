@@ -1,11 +1,11 @@
 "use client";
 
 import { Toaster } from "@/shadcn/ui/toaster";
-import { Dispatch, useCallback, useEffect } from "react";
+import { Dispatch, useCallback, useState } from "react";
 import { FileWithPath } from "@uploadthing/react";
 import { useDropzone } from "@uploadthing/react/hooks";
 import { generateClientDropzoneAccept } from "uploadthing/client";
-import { Action, State, useUploadReducer } from "@/app/hooks/useUploadReducer";
+import { Action, useUploadReducer } from "@/app/hooks/useUploadReducer";
 
 export default function FileUpload({
   dispatch,
@@ -13,6 +13,7 @@ export default function FileUpload({
   dispatch: Dispatch<Action>;
 }) {
   const { permittedFileInfo } = useUploadReducer();
+  const [uploaded, setUploaded] = useState(false);
 
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     console.log(acceptedFiles);
@@ -20,6 +21,7 @@ export default function FileUpload({
     const src = URL.createObjectURL(blob);
     dispatch({ type: "updateFile", file: acceptedFiles });
     dispatch({ type: "updatePreview", filePreview: src });
+    setUploaded(true);
   }, []);
 
   const fileTypes = permittedFileInfo?.config
@@ -36,7 +38,9 @@ export default function FileUpload({
       <Toaster />
       <div className="h-full w-full" {...getRootProps()}>
         <input {...getInputProps()} multiple={false} />
-        <p className="text-center">Drop Files here!</p>
+        <p className="text-center">
+          {uploaded ? "File uploaded" : "Drop Files here!"}
+        </p>
       </div>
       <div></div>
     </>
