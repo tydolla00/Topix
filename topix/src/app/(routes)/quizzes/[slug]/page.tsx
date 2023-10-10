@@ -4,10 +4,10 @@ import Madden from "../../../assets/madden24.webp";
 import { TabCard } from "./client";
 
 export default async function Quiz({ params }: { params: { slug: string } }) {
-  const quiz = await prisma.quizzes.findUniqueOrThrow({
+  const quiz = await prisma.quizzes.findUnique({
     where: { url: params.slug },
   });
-  console.log(quiz);
+  // console.log(quiz);
   return (
     <div className="sm:m-10">
       <div className="flex mb-3">
@@ -19,7 +19,7 @@ export default async function Quiz({ params }: { params: { slug: string } }) {
           height={500}
         />
         <div className="">
-          <h1 className="text-3xl font-bold">{quiz.name}</h1>
+          <h1 className="text-3xl font-bold">{quiz?.name || "Quiz Name"}</h1>
           <p>Submitted by Ty</p>
           <p className="py-3">
             Football has been around for over a century. This quiz includes a

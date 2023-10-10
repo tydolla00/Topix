@@ -36,7 +36,6 @@ export const authOptions = {
         newSession.user.name = token.name;
         newSession.user.role = token.role;
       }
-
       return newSession;
     },
     async jwt({ token, trigger, user, session }) {

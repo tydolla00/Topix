@@ -8,11 +8,13 @@ import { Input } from "@/shadcn/ui/input";
 
 export const TopixFields = ({
   control,
+  user,
   getValues,
   register,
   errors,
 }: {
   control: any;
+  user: string | null | undefined;
   getValues: any;
   register: any;
   errors: any;
@@ -27,12 +29,15 @@ export const TopixFields = ({
     },
   });
 
+  console.log(errors);
+
   return (
     <>
       <h2 className="text-xl font-bold">{`${fields.length} items added!`}</h2>
+      <p className="font-bold label-required">Topix</p>
       <div className="flex justify-between">
         <label className="label">Name</label>
-        <label className="label">Topix</label>
+        <label className="label">Link</label>
       </div>
       {fields.map((field, index) => (
         <div key={field.id} className="flex justify-between">
@@ -58,15 +63,17 @@ export const TopixFields = ({
                 color="#b51a00"
               />
             </div>
-            <ErrorMessage errors={errors} name={`topix.${index}].type`} />
-            <ErrorMessage errors={errors} name="topix.root" />
+            {/* <ErrorMessage errors={errors} name={`topix.${index}].type`} />
+            <ErrorMessage errors={errors} name="topix.root" /> */}
           </div>
         </div>
       ))}
+      <ErrorMessage errors={errors} name="topix" />
       <p className="text-slate-500 text-sm">
-        Enter the name and an image/link for each entry
+        Each entry must contain a name and a link of an image or video
       </p>
       <Button
+        disabled={!user}
         variant={"outline"}
         className="block my-2"
         onClick={() => {

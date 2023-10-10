@@ -9,6 +9,8 @@ import * as yup from "yup";
 import { useMyFetch } from "../hooks/useFetch";
 import { useUploadReducer } from "../hooks/useUploadReducer";
 import { Toaster } from "@/shadcn/ui/toaster";
+import { user } from "@prisma/client";
+import { toast } from "@/shadcn/ui/use-toast";
 
 const databases = ["game", "movie", "tv", "user", "games", "movies", "tvs"];
 const crud = ["CREATE", "UPDATE", "DELETE"];
@@ -51,9 +53,14 @@ export const validationSchema = yup.object().shape({
   path: homePageClause,
 });
 
-export default function SheetForm() {
+export default function SheetForm({
+  user,
+}: {
+  user: string | null | undefined;
+}) {
   const {
     register,
+    control,
     getValues,
     handleSubmit,
     setValue,
@@ -82,7 +89,7 @@ export default function SheetForm() {
 
   const onSubmit = async (data: any) => {
     console.log({ reducer });
-    if (reducer.file != null) {
+    if (reducer.file !== null) {
       console.log("got here");
       const res = await startUpload(reducer.file);
       const createData = {
@@ -94,6 +101,7 @@ export default function SheetForm() {
       console.log(res);
       const update = await fetchData(createData);
       console.log(update);
+      toast({ description: update });
     }
     // then submit form with axios to api.
     console.log({ data });
@@ -135,6 +143,8 @@ export default function SheetForm() {
           {crudOperations === "CREATE" &&
             ["game", "tv", "movie"].includes(String(databaseOperations)) && (
               <TopixInput
+                control={control}
+                user={user}
                 dispatch={dispatch}
                 errors={errors}
                 register={register}

@@ -5,6 +5,8 @@ import FileUpload from "./uploadFile";
 import { Action } from "../hooks/useUploadReducer";
 import { TopixFields } from "./input-client";
 import { Input } from "@/shadcn/ui/input";
+import { Alert, AlertDescription, AlertTitle } from "@/shadcn/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 export const InputForm = ({
   label,
@@ -77,6 +79,7 @@ FileInput.displayName = "FileInput";
 
 export const TopixInput = ({
   control,
+  user,
   getValues,
   register,
   setValue,
@@ -84,6 +87,7 @@ export const TopixInput = ({
   dispatch,
 }: {
   control?: any;
+  user: string | null | undefined;
   getValues?: any;
   register: any;
   setValue?: any;
@@ -91,9 +95,19 @@ export const TopixInput = ({
   dispatch: React.Dispatch<Action>;
 }) => (
   <>
+    {!user && (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Oops...</AlertTitle>
+        <AlertDescription>Please log in to add add a game</AlertDescription>
+      </Alert>
+    )}
+
     <label className="label-required">Createdby</label>
     <Input
+      disabled
       {...register("createdBy")}
+      defaultValue={user}
       className="w-full max-w-xs"
       type="text"
       placeholder="Enter username"
@@ -101,6 +115,7 @@ export const TopixInput = ({
     <p className="invalid-feedback">{errors.createdBy?.message}</p>
     <label className="label-required">Title</label>
     <Input
+      disabled={!user}
       {...register("title")}
       className="w-full max-w-xs"
       type="text"
@@ -109,12 +124,15 @@ export const TopixInput = ({
     <p className="invalid-feedback">{errors.title?.message}</p>
     <label className="label-required">TopixId</label>
     <Input
+      disabled={!user}
       {...register("topixId")}
       className="w-full max-w-xs"
       type="text"
       placeholder="Enter pathname"
     />
-    <p className="text-sm text-slate-400">Must be unique!</p>
+    <p className="text-sm text-slate-400">
+      Choose a name related to the title. Must be unique!
+    </p>
     <p className="invalid-feedback">{errors.topixId?.message}</p>
     <label className="label">Icon</label>
     <div className="w-full max-w-xs border-slate-800 border rounded-md cursor-pointer">
@@ -123,14 +141,14 @@ export const TopixInput = ({
     <p className="invalid-feedback">{errors.img?.message}</p>
     <label className="label-required">Description</label>
     <Textarea
+      disabled={!user}
       {...register("description")}
-      placeholder="Enter the description of your topix here!"
+      placeholder="Enter the description of your game here!"
     />
     <p className="invalid-feedback">{errors.description?.message}</p>
-    <p className="text-sm text-slate-400">
-      This will be the description of your topix!
-    </p>
+
     <TopixFields
+      user={user}
       control={control}
       getValues={getValues}
       register={register}

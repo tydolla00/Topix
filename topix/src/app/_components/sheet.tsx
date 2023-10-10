@@ -35,9 +35,9 @@ export default function Sheet({
         {children}
         <SheetFooter>
           <SheetClose asChild>
-            <Button className="mt-3" type="submit">
+            {/* <Button className="mt-3" type="submit">
               Close
-            </Button>
+            </Button> */}
           </SheetClose>
         </SheetFooter>
       </SheetContent>
