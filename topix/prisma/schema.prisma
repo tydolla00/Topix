@@ -31,6 +31,8 @@ model contact {
 
 model Scores{
   id      Int     @id @default(autoincrement())
+  user    String
+  score   Int
   gameId  Int?    @map("game_id")
   movieId Int?    @map("movie_id")
   tvId    Int?    @map("tv_id")
@@ -63,8 +65,9 @@ model question{
 }
 model games {
   id          Int       @id @default(autoincrement())
-  img         image    @relation(fields: [imageId], references: [id])
-  imageId     Int      @map("image_id") @unique      
+  title       String
+  img         image     @relation(fields: [imageId], references: [id])
+  imageId     Int       @map("image_id") @unique      
   description String
   path        String    @unique
 }

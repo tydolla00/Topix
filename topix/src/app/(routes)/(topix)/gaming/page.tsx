@@ -6,8 +6,11 @@ import Nintendo from "@/app/assets/nintendo.png";
 import VideoGame from "@/app/assets/videogame.png";
 import Youtube from "@/app/assets/youtube.webp";
 import TopixForm from "@/app/_components/form";
+import { getServerSession } from "next-auth";
+import { prisma } from "@/lib/utils";
 
-export default function Gaming() {
+export default async function Gaming() {
+  const games = await prisma.games.findMany({ include: { img: true } });
   const data = [
     {
       description: "Pika, pika ⚡️",
@@ -59,14 +62,14 @@ export default function Gaming() {
         <ShuffleIcon />
       </button>
       <TopixForm database="game" sheetTitle="Create your own Gaming Topix!" />
-      <div className="flex flex-wrap gap-2">
-        {data.map((cardItem) => (
-          <div key={cardItem.title} className="basis-1/3">
+      <div className="grid sm:grid-cols-3 grid-cols-2 gap-3">
+        {games.map((game) => (
+          <div key={game.title} className="basis-1/3">
             <TopixCard
-              description={cardItem.description}
-              title={cardItem.title}
-              img={cardItem.img}
-              url={cardItem.url}
+              description={game.description}
+              title={game.title}
+              img={game.img.link}
+              url={game.path}
             />
           </div>
         ))}

@@ -8,8 +8,9 @@ import { useForm } from "react-hook-form";
 import { TopixInput } from "./input";
 import { useUploadReducer } from "@/app/hooks/useUploadReducer";
 import { Button } from "@/shadcn/ui/button";
+import { useSession } from "next-auth/react";
 
-export default function TopixForm({
+export default async function TopixForm({
   sheetTitle,
   database,
 }: {
@@ -26,6 +27,7 @@ export default function TopixForm({
     formState: { errors },
   } = useForm({ resolver: yupResolver(validationSchema) });
   const { dispatch } = useUploadReducer();
+  const { data: session } = useSession();
 
   useEffect(() => {
     setValue("crud", "CREATE");
@@ -44,11 +46,14 @@ export default function TopixForm({
       reset={reset}
       triggerText="Create +"
       title={sheetTitle}
-      description="Fill out the fields and start adding topix to create a game for you and others around the world to play!"
+      description={`Create your own game to decide a winner among related topics. Games are played in a bracket style. 
+      Topix are in a name and link format.
+      Ex: Title - Best Foods. Item One: Hershey Bar - {link}`}
     >
       <div>
-        <form key={"Movies Form"} onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <TopixInput
+            user={session?.user?.email}
             control={control}
             getValues={getValues}
             setValue={setValue}
@@ -56,7 +61,9 @@ export default function TopixForm({
             errors={errors}
             dispatch={dispatch}
           />
-          <Button className="mt-3 block ml-auto">Submit</Button>
+          {session?.user?.email && (
+            <Button className="mt-3 block ml-auto">Submit</Button>
+          )}
         </form>
       </div>
     </Sheet>

@@ -48,6 +48,8 @@ export const TopixCard = ({ title, description, url, img }: TopixCard) => {
             {title}
           </CardTitle>
           <Image
+            height={60}
+            width={50}
             alt="Quiz Card Image"
             className="max-h-[50px] object-cover w-full"
             src={img}
@@ -60,7 +62,7 @@ export const TopixCard = ({ title, description, url, img }: TopixCard) => {
         <CardFooter className="relative">
           <Link
             className="btn btn-ghost btn-primary btn-outline w-full"
-            href={url}
+            href={`/gaming/${url}`}
           >
             Play now
           </Link>
@@ -74,5 +76,5 @@ type TopixCard = {
   title: string;
   description: string;
   url: string;
-  img: StaticImageData;
+  img: StaticImageData | string;
 };

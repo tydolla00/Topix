@@ -8,6 +8,7 @@ import Loading from "@/app/loading";
 
 export default async function Profile() {
   const session = await getServerSession();
+  console.log(session);
   const user = await prisma.user.findUnique({
     where: { email: session?.user?.email as string | undefined },
     select: {
