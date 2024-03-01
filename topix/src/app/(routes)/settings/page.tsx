@@ -1,51 +1,59 @@
-"use client";
-import { useUploadReducer } from "@/app/hooks/useUploadReducer";
-import { useState } from "react";
+import { prisma } from "@/lib/utils";
+import { user } from "@prisma/client";
+import { cache } from "react";
 
-export default function Settings() {
-  const { state, dispatch } = useUploadReducer();
-  const data = [
-    "Talk to me nicely",
-    "Hello",
-    "World",
-    "Denis",
-    "Pizza",
-    "Party pooper",
-    "Dummy",
-  ];
-  const [i, setI] = useState(0);
-  const [index, setIndex] = useState(data);
-  console.log("Settings", state.filePreview);
-  console.log(i);
+const getUsers = async () => {
+  const res = await fetch("http://localhost:3000/api/test");
+  return res.json();
+};
+
+const getUsersCached = cache(async () => {
+  const users = await prisma.user.findMany();
+  console.log("Cached function called");
+  return users;
+});
+
+export default async function Settings() {
+  const users: user[] = await getUsersCached();
   return (
     <>
-      <button
-        className="btn btn-ghost"
-        onClick={() => {
-          setI(i + 1);
-          console.log(i);
-        }}
-      >
-        Settings Button
-      </button>
-      <p>{index[i]}</p>
+      <p className="text-3xl font-bold">Settings Component</p>
+      {users.map((user) => (
+        <div key={user.id}>
+          <li>{user.name}</li>
+        </div>
+      ))}
+
       <Test />
-      <div>Settings Page</div>
+      <PrismaTest />
     </>
   );
 }
 
-const Test = () => {
-  const { state, dispatch } = useUploadReducer();
-  console.log("Test", state.filePreview);
+const Test = async () => {
+  const users: user[] = await getUsersCached();
   return (
-    <button
-      className="btn btn-ghost btn-primary btn-outline"
-      onClick={() =>
-        dispatch({ type: "updatePreview", filePreview: state.filePreview + 10 })
-      }
-    >
-      Test Button
-    </button>
+    <>
+      <p className="text-3xl font-bold text-purple-500">Test Component</p>
+      {users.map((user) => (
+        <div key={user.id}>
+          <li>{user.name}</li>
+        </div>
+      ))}
+    </>
+  );
+};
+
+const PrismaTest = async () => {
+  const users: user[] = await getUsersCached();
+  return (
+    <>
+      <p className="text-3xl font-bold text-red-500">Prisma Component</p>
+      {users.map((user) => (
+        <div key={user.id}>
+          <li>{user.name}</li>
+        </div>
+      ))}
+    </>
   );
 };
